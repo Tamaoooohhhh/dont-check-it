@@ -1011,8 +1011,14 @@
 
 <script>
 // ── CONFIG ──
-const OPENROUTER_API_KEY = "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";
-const MODEL = "meta-llama/llama-3.3-70b-instruct:free";
+const OPENROUTER_API_KEY = "YOUR_OPENROUTER_API_KEY_HERE";
+// Lista de modelos gratuitos — se intentan en orden hasta que uno responde
+const FREE_MODELS = [
+  "meta-llama/llama-3.1-8b-instruct:free",
+  "mistralai/mistral-7b-instruct:free",
+  "google/gemma-3-4b-it:free",
+  "deepseek/deepseek-r1-distill-llama-70b:free"
+];
 
 // ── MODE CONFIG ──
 const modes = {
@@ -1056,30 +1062,54 @@ function wordCount(text) {
 });
 
 // ── API ──
-async function callLLM(systemPrompt, userContent) {
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-      "HTTP-Referer": "https://clarity.app",
-      "X-Title": "Clarity"
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 2048,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userContent }
-      ]
-    })
-  });
-  if(!res.ok) {
-    const err = await res.json().catch(()=>({}));
-    throw new Error(err.error?.message || `Error ${res.status}`);
+async function callLLM(systemPrompt, userContent, modelIndex = 0) {
+  if (modelIndex >= FREE_MODELS.length) {
+    throw new Error("Todos los modelos gratuitos están ocupados. Intenta en unos segundos.");
   }
+  const model = FREE_MODELS[modelIndex];
+  setStatus(`Usando: ${model.split("/")[1].split(":")[0]}...`);
+
+  let res;
+  try {
+    res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "HTTP-Referer": "https://clarity.app",
+        "X-Title": "Clarity"
+      },
+      body: JSON.stringify({
+        model,
+        max_tokens: 2048,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userContent }
+        ]
+      })
+    });
+  } catch (networkErr) {
+    throw new Error("Error de red. Verifica tu conexión.");
+  }
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const msg = err.error?.message || `Error ${res.status}`;
+    // Si es error de proveedor o rate limit, probar el siguiente modelo
+    if (res.status === 429 || res.status === 502 || res.status === 503 || msg.toLowerCase().includes("provider")) {
+      console.warn(`Modelo ${model} falló (${msg}), probando siguiente...`);
+      return callLLM(systemPrompt, userContent, modelIndex + 1);
+    }
+    throw new Error(msg);
+  }
+
   const data = await res.json();
-  return data.choices?.[0]?.message?.content?.trim() || '';
+  const content = data.choices?.[0]?.message?.content?.trim();
+  if (!content) {
+    console.warn(`Modelo ${model} devolvió vacío, probando siguiente...`);
+    return callLLM(systemPrompt, userContent, modelIndex + 1);
+  }
+  return content;
 }
 
 function setOutput(id, text) {
