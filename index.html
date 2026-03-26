@@ -1011,8 +1011,9 @@
 
 <script>
 // ── CONFIG ──
-const OPENROUTER_API_KEY = "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";
-
+const OPENROUTER_API_KEY = "YOUR_OPENROUTER_API_KEY_HERE";
+// openrouter/free: router oficial gratuito de OpenRouter (selecciona el mejor modelo libre disponible)
+// Los siguientes son fallbacks con modelos :free confirmados activos en marzo 2026
 const FREE_MODELS = [
   "openrouter/free",
   "meta-llama/llama-4-scout:free",
@@ -1068,7 +1069,6 @@ async function callLLM(systemPrompt, userContent, modelIndex = 0) {
     throw new Error("Todos los modelos gratuitos están ocupados. Intenta en unos segundos.");
   }
   const model = FREE_MODELS[modelIndex];
-  setStatus(`Usando: ${model.split("/")[1].split(":")[0]}...`);
 
   let res;
   try {
@@ -1113,17 +1113,32 @@ async function callLLM(systemPrompt, userContent, modelIndex = 0) {
   return content;
 }
 
+function stripMarkdown(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '$1')       // **negrita**
+    .replace(/\*(.+?)\*/g, '$1')            // *cursiva*
+    .replace(/_{1,2}(.+?)_{1,2}/g, '$1')   // _cursiva_ o __negrita__
+    .replace(/#{1,6}\s+/gm, '')             // # encabezados
+    .replace(/`{1,3}[^`]*`{1,3}/g, (m) => m.replace(/`/g,'')) // `código`
+    .replace(/^\s*[-*+]\s+/gm, '• ')       // listas con guion/asterisco → bullet limpio
+    .replace(/^\s*\d+\.\s+/gm, '')         // listas numeradas
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')    // [texto](url) → texto
+    .replace(/\n{3,}/g, '\n\n')            // más de dos saltos → dos
+    .trim();
+}
+
 function setOutput(id, text) {
+  const clean = stripMarkdown(text);
   const el = document.getElementById(id);
   el.innerHTML = '';
   const pre = document.createElement('div');
   pre.style.whiteSpace = 'pre-wrap';
-  pre.textContent = text;
+  pre.textContent = clean;
   el.appendChild(pre);
   const btn = document.createElement('button');
   btn.className = 'copy-btn';
   btn.textContent = 'Copiar';
-  btn.onclick = () => copyText(text);
+  btn.onclick = () => copyText(clean);
   el.appendChild(btn);
   el.classList.add('fade-in');
 }
@@ -1275,7 +1290,7 @@ async function runCurrent() {
         <div class="score-card"><div class="score-number">${parsed.structure}</div><div class="score-label">Estructura</div></div>
       `;
       document.getElementById('co-scores').style.display = 'block';
-      setOutput('co-output', parsed.analysis || '');
+      setOutput('co-output', stripMarkdown(parsed.analysis || ''));
 
     } else if(currentMode === 'verify') {
       const url = document.getElementById('vf-url').value.trim();
@@ -1345,7 +1360,7 @@ async function generateCitation() {
   const userMsg = `Autor: ${author || 'N/A'}\nAño: ${year || 'N/A'}\nTítulo: ${title || 'N/A'}\nFuente/Editorial: ${source || 'N/A'}\nDOI/Páginas: ${extra || 'N/A'}`;
   try {
     const result = await callLLM(sys, userMsg);
-    citOut.textContent = result;
+    citOut.textContent = stripMarkdown(result);
 
     // If context provided, integrate citation
     const ctx = document.getElementById('cit-context').value.trim();
