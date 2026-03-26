@@ -705,7 +705,6 @@
         <div class="mode-desc" id="modeDesc">Elimina patrones de IA. Devuelve voz natural al texto.</div>
       </div>
       <div class="header-controls">
-        <span class="status-line" id="globalStatus"></span>
         <button class="btn btn-ghost" onclick="clearAll()">Limpiar</button>
         <button class="btn btn-primary" id="runBtn" onclick="runCurrent()">Procesar</button>
       </div>
@@ -1144,7 +1143,8 @@ function setOutput(id, text) {
 }
 
 function setStatus(msg) {
-  document.getElementById('globalStatus').textContent = msg;
+  // solo mostrar errores reales en consola, nada visible al usuario
+  if (msg) console.warn('Clarity:', msg);
 }
 
 function copyText(text) {
@@ -1320,12 +1320,11 @@ async function runCurrent() {
 
     setStatus('');
   } catch(err) {
-    setStatus('Error: ' + err.message);
     const outputs = { humanize:'h-output', paraphrase:'p-output', rewrite:'rw-output', style:'st-output', coherence:'co-output', verify:'vf-output', multilang:'ml-output' };
     const outId = outputs[currentMode];
     if(outId) {
       const el = document.getElementById(outId);
-      if(el) el.innerHTML = `<span style="color:#c00;font-size:13px;">${err.message}</span>`;
+      if(el) el.innerHTML = `<span style="color:#999;font-size:13px;font-family:var(--font-mono);">No se pudo procesar. Intenta de nuevo en unos segundos.</span>`;
     }
   } finally {
     btn.disabled = false;
