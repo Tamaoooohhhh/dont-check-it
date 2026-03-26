@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light" data-palette="mono">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,15 +9,319 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* ═══════════════════════════════════════
+     PALETTES
+  ═══════════════════════════════════════ */
+
+  /* MONO — blanco y negro */
+  [data-palette="mono"][data-theme="light"] {
+    --bg:        #fafafa;
+    --bg-alt:    #f0f0f0;
+    --surface:   #fafafa;
+    --border:    #d8d8d8;
+    --border-2:  #bbb;
+    --text:      #0a0a0a;
+    --text-2:    #555;
+    --text-3:    #999;
+    --sidebar-bg:#0a0a0a;
+    --sidebar-tx:rgba(255,255,255,0.5);
+    --sidebar-active: rgba(255,255,255,0.1);
+    --sidebar-hover:  rgba(255,255,255,0.06);
+    --sidebar-accent: #ffffff;
+    --sidebar-label:  rgba(255,255,255,0.25);
+    --accent:    #0a0a0a;
+    --accent-tx: #fafafa;
+    --btn-ghost-border: #d8d8d8;
+    --btn-ghost-tx:     #555;
+    --score-number:     #0a0a0a;
+  }
+  [data-palette="mono"][data-theme="dark"] {
+    --bg:        #111111;
+    --bg-alt:    #1c1c1c;
+    --surface:   #181818;
+    --border:    #2e2e2e;
+    --border-2:  #444;
+    --text:      #f0f0f0;
+    --text-2:    #aaa;
+    --text-3:    #666;
+    --sidebar-bg:#0a0a0a;
+    --sidebar-tx:rgba(255,255,255,0.45);
+    --sidebar-active: rgba(255,255,255,0.08);
+    --sidebar-hover:  rgba(255,255,255,0.05);
+    --sidebar-accent: #ffffff;
+    --sidebar-label:  rgba(255,255,255,0.2);
+    --accent:    #e8e8e8;
+    --accent-tx: #111;
+    --btn-ghost-border: #2e2e2e;
+    --btn-ghost-tx:     #aaa;
+    --score-number:     #f0f0f0;
+  }
+
+  /* BEIGE — cálido moderno */
+  [data-palette="beige"][data-theme="light"] {
+    --bg:        #f5f0e8;
+    --bg-alt:    #ebe4d6;
+    --surface:   #f5f0e8;
+    --border:    #d6cbb8;
+    --border-2:  #b8aa96;
+    --text:      #2a2118;
+    --text-2:    #6b5c47;
+    --text-3:    #9e8e7a;
+    --sidebar-bg:#2a2118;
+    --sidebar-tx:rgba(245,240,232,0.5);
+    --sidebar-active: rgba(245,240,232,0.1);
+    --sidebar-hover:  rgba(245,240,232,0.06);
+    --sidebar-accent: #f5f0e8;
+    --sidebar-label:  rgba(245,240,232,0.25);
+    --accent:    #2a2118;
+    --accent-tx: #f5f0e8;
+    --btn-ghost-border: #d6cbb8;
+    --btn-ghost-tx:     #6b5c47;
+    --score-number:     #2a2118;
+  }
+  [data-palette="beige"][data-theme="dark"] {
+    --bg:        #1e1a14;
+    --bg-alt:    #272118;
+    --surface:   #221d16;
+    --border:    #3a3025;
+    --border-2:  #4e4134;
+    --text:      #e8dece;
+    --text-2:    #a8967e;
+    --text-3:    #6e5e4a;
+    --sidebar-bg:#131009;
+    --sidebar-tx:rgba(232,222,206,0.45);
+    --sidebar-active: rgba(232,222,206,0.08);
+    --sidebar-hover:  rgba(232,222,206,0.05);
+    --sidebar-accent: #e8dece;
+    --sidebar-label:  rgba(232,222,206,0.2);
+    --accent:    #d4c4a8;
+    --accent-tx: #1e1a14;
+    --btn-ghost-border: #3a3025;
+    --btn-ghost-tx:     #a8967e;
+    --score-number:     #e8dece;
+  }
+
+  /* SLATE — azul pizarra frío */
+  [data-palette="slate"][data-theme="light"] {
+    --bg:        #f4f6f8;
+    --bg-alt:    #e8ecf0;
+    --surface:   #f4f6f8;
+    --border:    #cdd4dc;
+    --border-2:  #adb8c4;
+    --text:      #1a2330;
+    --text-2:    #4a5a6a;
+    --text-3:    #8a9aaa;
+    --sidebar-bg:#1a2330;
+    --sidebar-tx:rgba(244,246,248,0.5);
+    --sidebar-active: rgba(244,246,248,0.1);
+    --sidebar-hover:  rgba(244,246,248,0.06);
+    --sidebar-accent: #f4f6f8;
+    --sidebar-label:  rgba(244,246,248,0.25);
+    --accent:    #1a2330;
+    --accent-tx: #f4f6f8;
+    --btn-ghost-border: #cdd4dc;
+    --btn-ghost-tx:     #4a5a6a;
+    --score-number:     #1a2330;
+  }
+  [data-palette="slate"][data-theme="dark"] {
+    --bg:        #10161e;
+    --bg-alt:    #161e28;
+    --surface:   #131a22;
+    --border:    #222e3c;
+    --border-2:  #344050;
+    --text:      #d8e4f0;
+    --text-2:    #7a9ab4;
+    --text-3:    #4a6278;
+    --sidebar-bg:#0c1018;
+    --sidebar-tx:rgba(216,228,240,0.45);
+    --sidebar-active: rgba(216,228,240,0.08);
+    --sidebar-hover:  rgba(216,228,240,0.05);
+    --sidebar-accent: #d8e4f0;
+    --sidebar-label:  rgba(216,228,240,0.2);
+    --accent:    #b8d0e8;
+    --accent-tx: #10161e;
+    --btn-ghost-border: #222e3c;
+    --btn-ghost-tx:     #7a9ab4;
+    --score-number:     #d8e4f0;
+  }
+
+  /* SAGE — verde musgo apagado */
+  [data-palette="sage"][data-theme="light"] {
+    --bg:        #f2f5f2;
+    --bg-alt:    #e5ebe5;
+    --surface:   #f2f5f2;
+    --border:    #c8d4c8;
+    --border-2:  #a8bca8;
+    --text:      #1a251c;
+    --text-2:    #4a5e4c;
+    --text-3:    #8a9e8c;
+    --sidebar-bg:#1a251c;
+    --sidebar-tx:rgba(242,245,242,0.5);
+    --sidebar-active: rgba(242,245,242,0.1);
+    --sidebar-hover:  rgba(242,245,242,0.06);
+    --sidebar-accent: #f2f5f2;
+    --sidebar-label:  rgba(242,245,242,0.25);
+    --accent:    #1a251c;
+    --accent-tx: #f2f5f2;
+    --btn-ghost-border: #c8d4c8;
+    --btn-ghost-tx:     #4a5e4c;
+    --score-number:     #1a251c;
+  }
+  [data-palette="sage"][data-theme="dark"] {
+    --bg:        #101810;
+    --bg-alt:    #162016;
+    --surface:   #131a13;
+    --border:    #223022;
+    --border-2:  #344434;
+    --text:      #d4e4d4;
+    --text-2:    #78a878;
+    --text-3:    #486448;
+    --sidebar-bg:#0c1410;
+    --sidebar-tx:rgba(212,228,212,0.45);
+    --sidebar-active: rgba(212,228,212,0.08);
+    --sidebar-hover:  rgba(212,228,212,0.05);
+    --sidebar-accent: #d4e4d4;
+    --sidebar-label:  rgba(212,228,212,0.2);
+    --accent:    #b4ccb4;
+    --accent-tx: #101810;
+    --btn-ghost-border: #223022;
+    --btn-ghost-tx:     #78a878;
+    --score-number:     #d4e4d4;
+  }
+
+  /* ROSE — rosa apagado cálido */
+  [data-palette="rose"][data-theme="light"] {
+    --bg:        #f8f2f4;
+    --bg-alt:    #ede4e8;
+    --surface:   #f8f2f4;
+    --border:    #d8c8cc;
+    --border-2:  #bca8ae;
+    --text:      #2a181c;
+    --text-2:    #6a4850;
+    --text-3:    #a08890;
+    --sidebar-bg:#2a181c;
+    --sidebar-tx:rgba(248,242,244,0.5);
+    --sidebar-active: rgba(248,242,244,0.1);
+    --sidebar-hover:  rgba(248,242,244,0.06);
+    --sidebar-accent: #f8f2f4;
+    --sidebar-label:  rgba(248,242,244,0.25);
+    --accent:    #2a181c;
+    --accent-tx: #f8f2f4;
+    --btn-ghost-border: #d8c8cc;
+    --btn-ghost-tx:     #6a4850;
+    --score-number:     #2a181c;
+  }
+  [data-palette="rose"][data-theme="dark"] {
+    --bg:        #1a1014;
+    --bg-alt:    #22161a;
+    --surface:   #1e1318;
+    --border:    #342028;
+    --border-2:  #4e3040;
+    --text:      #f0dce4;
+    --text-2:    #b07888;
+    --text-3:    #785060;
+    --sidebar-bg:#140c10;
+    --sidebar-tx:rgba(240,220,228,0.45);
+    --sidebar-active: rgba(240,220,228,0.08);
+    --sidebar-hover:  rgba(240,220,228,0.05);
+    --sidebar-accent: #f0dce4;
+    --sidebar-label:  rgba(240,220,228,0.2);
+    --accent:    #d8b8c4;
+    --accent-tx: #1a1014;
+    --btn-ghost-border: #342028;
+    --btn-ghost-tx:     #b07888;
+    --score-number:     #f0dce4;
+  }
+
+  /* DUSK — lavanda oscuro suave */
+  [data-palette="dusk"][data-theme="light"] {
+    --bg:        #f4f2f8;
+    --bg-alt:    #eae6f2;
+    --surface:   #f4f2f8;
+    --border:    #ccc8dc;
+    --border-2:  #aaa4c4;
+    --text:      #201828;
+    --text-2:    #544868;
+    --text-3:    #8a80a4;
+    --sidebar-bg:#201828;
+    --sidebar-tx:rgba(244,242,248,0.5);
+    --sidebar-active: rgba(244,242,248,0.1);
+    --sidebar-hover:  rgba(244,242,248,0.06);
+    --sidebar-accent: #f4f2f8;
+    --sidebar-label:  rgba(244,242,248,0.25);
+    --accent:    #201828;
+    --accent-tx: #f4f2f8;
+    --btn-ghost-border: #ccc8dc;
+    --btn-ghost-tx:     #544868;
+    --score-number:     #201828;
+  }
+  [data-palette="dusk"][data-theme="dark"] {
+    --bg:        #141018;
+    --bg-alt:    #1c1824;
+    --surface:   #18141e;
+    --border:    #2c2840;
+    --border-2:  #403c58;
+    --text:      #e4dff4;
+    --text-2:    #9488c4;
+    --text-3:    #625880;
+    --sidebar-bg:#100c14;
+    --sidebar-tx:rgba(228,223,244,0.45);
+    --sidebar-active: rgba(228,223,244,0.08);
+    --sidebar-hover:  rgba(228,223,244,0.05);
+    --sidebar-accent: #e4dff4;
+    --sidebar-label:  rgba(228,223,244,0.2);
+    --accent:    #c4b8e8;
+    --accent-tx: #141018;
+    --btn-ghost-border: #2c2840;
+    --btn-ghost-tx:     #9488c4;
+    --score-number:     #e4dff4;
+  }
+
+  /* INK — azul marino profundo */
+  [data-palette="ink"][data-theme="light"] {
+    --bg:        #f0f4f8;
+    --bg-alt:    #e2eaf2;
+    --surface:   #f0f4f8;
+    --border:    #c0d0e0;
+    --border-2:  #98b0c8;
+    --text:      #0e1a28;
+    --text-2:    #365878;
+    --text-3:    #7494b0;
+    --sidebar-bg:#0e1a28;
+    --sidebar-tx:rgba(240,244,248,0.5);
+    --sidebar-active: rgba(240,244,248,0.1);
+    --sidebar-hover:  rgba(240,244,248,0.06);
+    --sidebar-accent: #f0f4f8;
+    --sidebar-label:  rgba(240,244,248,0.25);
+    --accent:    #0e1a28;
+    --accent-tx: #f0f4f8;
+    --btn-ghost-border: #c0d0e0;
+    --btn-ghost-tx:     #365878;
+    --score-number:     #0e1a28;
+  }
+  [data-palette="ink"][data-theme="dark"] {
+    --bg:        #080e16;
+    --bg-alt:    #0e1820;
+    --surface:   #0b141c;
+    --border:    #182434;
+    --border-2:  #28384c;
+    --text:      #c8daf0;
+    --text-2:    #6898c8;
+    --text-3:    #406080;
+    --sidebar-bg:#060c14;
+    --sidebar-tx:rgba(200,218,240,0.45);
+    --sidebar-active: rgba(200,218,240,0.08);
+    --sidebar-hover:  rgba(200,218,240,0.05);
+    --sidebar-accent: #c8daf0;
+    --sidebar-label:  rgba(200,218,240,0.2);
+    --accent:    #98c0e8;
+    --accent-tx: #080e16;
+    --btn-ghost-border: #182434;
+    --btn-ghost-tx:     #6898c8;
+    --score-number:     #c8daf0;
+  }
+
   :root {
-    --black: #0a0a0a;
-    --white: #fafafa;
-    --gray-100: #f0f0f0;
-    --gray-200: #d8d8d8;
-    --gray-400: #999;
-    --gray-600: #555;
-    --gray-800: #222;
-    --accent: #0a0a0a;
     --sidebar-w: 260px;
     --font-display: 'DM Serif Display', Georgia, serif;
     --font-body: 'DM Sans', sans-serif;
@@ -28,45 +332,42 @@
 
   html, body {
     height: 100%;
-    background: var(--white);
-    color: var(--black);
+    background: var(--bg);
+    color: var(--text);
     font-family: var(--font-body);
     font-size: 15px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    transition: background 0.2s ease, color 0.2s ease;
   }
 
   /* ── LAYOUT ── */
-  .app {
-    display: flex;
-    height: 100vh;
-    overflow: hidden;
-  }
+  .app { display: flex; height: 100vh; overflow: hidden; }
 
   /* ── SIDEBAR ── */
   .sidebar {
     width: var(--sidebar-w);
     min-width: var(--sidebar-w);
-    background: var(--black);
-    color: var(--white);
+    background: var(--sidebar-bg);
+    color: var(--sidebar-accent);
     display: flex;
     flex-direction: column;
-    padding: 0;
     overflow: hidden;
     position: relative;
     z-index: 10;
+    transition: background 0.2s ease;
   }
 
   .sidebar-header {
     padding: 28px 24px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(128,128,128,0.12);
   }
 
   .logo {
     font-family: var(--font-display);
     font-size: 26px;
     letter-spacing: -0.5px;
-    color: var(--white);
+    color: var(--sidebar-accent);
     display: block;
     line-height: 1;
     margin-bottom: 4px;
@@ -76,7 +377,7 @@
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.35);
+    color: var(--sidebar-label);
     font-weight: 300;
     font-family: var(--font-mono);
   }
@@ -93,7 +394,7 @@
     font-size: 10px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.25);
+    color: var(--sidebar-label);
     font-family: var(--font-mono);
     padding: 12px 24px 6px;
     font-weight: 400;
@@ -106,7 +407,7 @@
     padding: 9px 24px;
     cursor: pointer;
     transition: background var(--transition), color var(--transition);
-    color: rgba(255,255,255,0.5);
+    color: var(--sidebar-tx);
     font-size: 13.5px;
     font-weight: 400;
     position: relative;
@@ -116,41 +417,130 @@
     width: 100%;
     text-align: left;
   }
-
-  .nav-item:hover {
-    background: rgba(255,255,255,0.06);
-    color: rgba(255,255,255,0.85);
-  }
-
-  .nav-item.active {
-    color: var(--white);
-    background: rgba(255,255,255,0.1);
-  }
-
+  .nav-item:hover { background: var(--sidebar-hover); color: var(--sidebar-accent); }
+  .nav-item.active { color: var(--sidebar-accent); background: var(--sidebar-active); }
   .nav-item.active::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    left: 0; top: 0; bottom: 0;
     width: 2px;
-    background: var(--white);
+    background: var(--sidebar-accent);
   }
 
-  .nav-icon {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    opacity: 0.7;
-  }
-
+  .nav-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
   .nav-item.active .nav-icon { opacity: 1; }
 
-  .sidebar-footer {
-    padding: 16px 24px;
-    border-top: 1px solid rgba(255,255,255,0.08);
+  /* ── THEME PANEL IN SIDEBAR ── */
+  .theme-panel {
+    padding: 16px 24px 20px;
+    border-top: 1px solid rgba(128,128,128,0.12);
+  }
+
+  .theme-panel-title {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sidebar-label);
+    font-family: var(--font-mono);
+    margin-bottom: 12px;
+  }
+
+  /* Dark/Light toggle */
+  .mode-toggle {
+    display: flex;
+    background: rgba(128,128,128,0.12);
+    border-radius: 3px;
+    padding: 2px;
+    margin-bottom: 14px;
+    gap: 2px;
+  }
+
+  .mode-btn {
+    flex: 1;
     font-size: 11px;
-    color: rgba(255,255,255,0.2);
+    font-family: var(--font-mono);
+    padding: 5px 0;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--sidebar-tx);
+    transition: all var(--transition);
+    letter-spacing: 0.05em;
+  }
+  .mode-btn.active {
+    background: var(--sidebar-accent);
+    color: var(--sidebar-bg);
+    font-weight: 500;
+  }
+
+  /* ── PALETTE PICKER ── */
+  .palette-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .palette-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 4px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background var(--transition);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+  .palette-option:hover { background: rgba(128,128,128,0.08); }
+
+  .palette-dot-wrap {
+    position: relative;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+  }
+
+  .palette-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .palette-option.active .palette-dot-wrap::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1.5px solid var(--sidebar-accent);
+  }
+
+  .dot-mono  { background: conic-gradient(#0a0a0a 180deg, #e8e8e8 180deg); }
+  .dot-beige { background: conic-gradient(#2a2118 180deg, #f0e8d6 180deg); }
+  .dot-slate { background: conic-gradient(#1a2330 180deg, #dce8f4 180deg); }
+  .dot-sage  { background: conic-gradient(#1e2a22 180deg, #e4ede6 180deg); }
+  .dot-rose  { background: conic-gradient(#2a1a1e 180deg, #f5e8ec 180deg); }
+  .dot-dusk  { background: conic-gradient(#1e1828 180deg, #e8e4f4 180deg); }
+  .dot-ink   { background: conic-gradient(#0e1520 180deg, #c8d8e8 180deg); }
+
+  .palette-name {
+    font-size: 11.5px;
+    font-family: var(--font-mono);
+    color: var(--sidebar-tx);
+    letter-spacing: 0.03em;
+    transition: color var(--transition);
+  }
+  .palette-option.active .palette-name { color: var(--sidebar-accent); }
+  .palette-option:hover .palette-name  { color: var(--sidebar-accent); }
+
+  .sidebar-footer {
+    padding: 12px 24px;
+    border-top: 1px solid rgba(128,128,128,0.1);
+    font-size: 11px;
+    color: var(--sidebar-label);
     font-family: var(--font-mono);
   }
 
@@ -160,7 +550,8 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: var(--white);
+    background: var(--bg);
+    transition: background 0.2s ease;
   }
 
   .main-header {
@@ -168,30 +559,27 @@
     align-items: center;
     justify-content: space-between;
     padding: 18px 36px;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--border);
     min-height: 64px;
-    background: var(--white);
+    background: var(--bg);
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
 
   .mode-title {
     font-family: var(--font-display);
     font-size: 21px;
     letter-spacing: -0.3px;
-    color: var(--black);
+    color: var(--text);
   }
 
   .mode-desc {
     font-size: 12.5px;
-    color: var(--gray-400);
+    color: var(--text-3);
     margin-top: 1px;
     font-weight: 300;
   }
 
-  .header-controls {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
+  .header-controls { display: flex; gap: 10px; align-items: center; }
 
   .btn {
     font-family: var(--font-body);
@@ -207,25 +595,18 @@
 
   .btn-ghost {
     background: transparent;
-    border-color: var(--gray-200);
-    color: var(--gray-600);
+    border-color: var(--btn-ghost-border);
+    color: var(--btn-ghost-tx);
   }
-  .btn-ghost:hover { border-color: var(--gray-400); color: var(--black); }
+  .btn-ghost:hover { border-color: var(--border-2); color: var(--text); }
 
   .btn-primary {
-    background: var(--black);
-    color: var(--white);
-    border-color: var(--black);
+    background: var(--accent);
+    color: var(--accent-tx);
+    border-color: var(--accent);
   }
-  .btn-primary:hover { background: #222; }
+  .btn-primary:hover { opacity: 0.88; }
   .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
-
-  /* ── WORKSPACE ── */
-  .workspace {
-    flex: 1;
-    display: flex;
-    overflow: hidden;
-  }
 
   /* ── PANEL ── */
   .panel {
@@ -237,26 +618,15 @@
     gap: 16px;
   }
 
-  .panel-split {
-    display: flex;
-    gap: 20px;
-    flex: 1;
-    overflow: hidden;
-  }
+  .panel-split { display: flex; gap: 20px; flex: 1; overflow: hidden; }
 
-  .column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    overflow: hidden;
-  }
+  .column { flex: 1; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
 
   .column-label {
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--gray-400);
+    color: var(--text-3);
     font-family: var(--font-mono);
     font-weight: 400;
   }
@@ -264,96 +634,63 @@
   .textarea {
     flex: 1;
     resize: none;
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px 18px;
     font-family: var(--font-body);
     font-size: 14px;
     line-height: 1.7;
-    color: var(--black);
-    background: var(--white);
-    transition: border-color var(--transition);
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color var(--transition), background 0.2s ease, color 0.2s ease;
     outline: none;
     min-height: 200px;
   }
-  .textarea:focus { border-color: var(--black); }
-  .textarea::placeholder { color: var(--gray-400); }
-  .textarea[readonly] {
-    background: var(--gray-100);
-    color: var(--gray-800);
-  }
+  .textarea:focus { border-color: var(--accent); }
+  .textarea::placeholder { color: var(--text-3); }
 
   .output-box {
     flex: 1;
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 16px 18px;
     font-family: var(--font-body);
     font-size: 14px;
     line-height: 1.7;
-    color: var(--black);
-    background: var(--gray-100);
+    color: var(--text);
+    background: var(--bg-alt);
     overflow-y: auto;
     min-height: 200px;
     white-space: pre-wrap;
     position: relative;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   }
 
-  .output-placeholder {
-    color: var(--gray-400);
-    font-style: italic;
-    font-size: 13.5px;
-  }
+  .output-placeholder { color: var(--text-3); font-style: italic; font-size: 13.5px; }
 
   /* ── OPTIONS ROW ── */
-  .options-row {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
+  .options-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 
   .select {
     font-family: var(--font-body);
     font-size: 12.5px;
-    color: var(--black);
-    background: var(--white);
-    border: 1px solid var(--gray-200);
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 6px 10px;
     cursor: pointer;
     outline: none;
-    transition: border-color var(--transition);
+    transition: border-color var(--transition), background 0.2s ease, color 0.2s ease;
     appearance: none;
     padding-right: 28px;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
   }
-  .select:focus { border-color: var(--black); }
+  .select:focus { border-color: var(--accent); }
 
-  .options-label {
-    font-size: 12px;
-    color: var(--gray-400);
-    font-weight: 300;
-  }
-
-  /* ── LOADING ── */
-  .loading-bar {
-    height: 2px;
-    background: var(--black);
-    width: 0%;
-    transition: width 0.8s ease;
-    border-radius: 1px;
-  }
-
-  .loading-wrap {
-    background: var(--gray-200);
-    border-radius: 1px;
-    overflow: hidden;
-    height: 2px;
-    margin-bottom: 4px;
-  }
+  .options-label { font-size: 12px; color: var(--text-3); font-weight: 300; }
 
   @keyframes shimmer {
     0% { opacity: 0.4; }
@@ -363,188 +700,79 @@
 
   .thinking {
     font-size: 12px;
-    color: var(--gray-400);
+    color: var(--text-3);
     font-family: var(--font-mono);
     animation: shimmer 1.4s infinite;
   }
 
-  /* ── CITATION PANEL ── */
-  .citation-card {
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    margin-bottom: 10px;
-    background: var(--white);
-  }
-
-  .citation-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 8px;
-  }
-
-  .citation-type-badge {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-family: var(--font-mono);
-    background: var(--black);
-    color: var(--white);
-    padding: 2px 7px;
-    border-radius: 2px;
-  }
-
+  /* ── CITATION OUTPUT ── */
   .citation-output {
     font-family: var(--font-mono);
     font-size: 12.5px;
-    color: var(--gray-600);
+    color: var(--text-2);
     line-height: 1.6;
-    background: var(--gray-100);
+    background: var(--bg-alt);
     padding: 10px 12px;
     border-radius: var(--radius);
     margin-top: 8px;
-    border-left: 2px solid var(--black);
+    border-left: 2px solid var(--accent);
+    transition: background 0.2s ease;
   }
-
-  /* ── SOURCE VERIFY ── */
-  .verify-result {
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-top: 8px;
-  }
-
-  .verify-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .status-dot.ok { background: #1a1a1a; }
-  .status-dot.warn { background: #888; }
-  .status-dot.bad { background: #000; border: 2px solid #888; }
 
   /* ── SCROLLBARS ── */
   .output-box::-webkit-scrollbar { width: 4px; }
   .output-box::-webkit-scrollbar-track { background: transparent; }
-  .output-box::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+  .output-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
   /* ── COPY BUTTON ── */
   .copy-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 10px; right: 10px;
     font-size: 11px;
     padding: 4px 10px;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     cursor: pointer;
     font-family: var(--font-mono);
-    color: var(--gray-600);
+    color: var(--text-2);
     transition: all var(--transition);
     opacity: 0;
   }
   .output-box:hover .copy-btn { opacity: 1; }
-  .copy-btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+  .copy-btn:hover { background: var(--accent); color: var(--accent-tx); border-color: var(--accent); }
 
   /* ── INPUT FIELDS ── */
   .input {
     font-family: var(--font-body);
     font-size: 13.5px;
     padding: 9px 12px;
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     outline: none;
-    color: var(--black);
-    background: var(--white);
-    transition: border-color var(--transition);
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color var(--transition), background 0.2s ease, color 0.2s ease;
     width: 100%;
   }
-  .input:focus { border-color: var(--black); }
+  .input:focus { border-color: var(--accent); }
 
-  .field-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .field-label {
-    font-size: 11.5px;
-    font-weight: 500;
-    color: var(--gray-600);
-  }
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+  .field-label { font-size: 11.5px; font-weight: 500; color: var(--text-2); }
 
   /* ── FORM GRID ── */
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
   /* ── DIVIDER ── */
   .divider {
     width: 1px;
-    background: var(--gray-200);
+    background: var(--border);
     align-self: stretch;
-    margin: 0;
     flex-shrink: 0;
+    transition: background 0.2s ease;
   }
 
-  /* ── PAGE (single column modes) ── */
-  .panel-single {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding: 28px 36px;
-    gap: 16px;
-  }
-
-  .full-output {
-    flex: 1;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    background: var(--gray-100);
-    overflow-y: auto;
-    font-size: 14px;
-    line-height: 1.7;
-    white-space: pre-wrap;
-    position: relative;
-  }
-
-  /* ── CHIP TOGGLES ── */
-  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
-  .chip {
-    font-size: 12px;
-    padding: 5px 13px;
-    border-radius: 100px;
-    border: 1px solid var(--gray-200);
-    cursor: pointer;
-    transition: all var(--transition);
-    font-family: var(--font-body);
-    color: var(--gray-600);
-    background: var(--white);
-    user-select: none;
-  }
-  .chip.selected {
-    background: var(--black);
-    color: var(--white);
-    border-color: var(--black);
-  }
-  .chip:hover:not(.selected) { border-color: var(--black); color: var(--black); }
-
-  /* ── COHERENCE scores ── */
+  /* ── COHERENCE SCORES ── */
   .score-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -553,55 +781,45 @@
   }
 
   .score-card {
-    border: 1px solid var(--gray-200);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 14px;
     text-align: center;
+    background: var(--surface);
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
 
   .score-number {
     font-family: var(--font-display);
     font-size: 36px;
     line-height: 1;
-    color: var(--black);
+    color: var(--score-number);
     margin-bottom: 4px;
   }
 
   .score-label {
     font-size: 11px;
-    color: var(--gray-400);
+    color: var(--text-3);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     font-family: var(--font-mono);
   }
 
   /* ── STYLE ADAPTER ── */
-  .reference-area {
-    display: flex;
-    gap: 20px;
-    flex: 1;
-    overflow: hidden;
-  }
+  .reference-area { display: flex; gap: 20px; flex: 1; overflow: hidden; }
 
-  /* animations */
+  /* ── ANIMATIONS ── */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
   }
   .fade-in { animation: fadeIn 0.25s ease forwards; }
 
   .panel-view { display: none; }
   .panel-view.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
 
-
-  /* Word count */
-  .wc {
-    font-size: 11px;
-    color: var(--gray-400);
-    font-family: var(--font-mono);
-    text-align: right;
-    padding-top: 3px;
-  }
+  /* ── WORD COUNT ── */
+  .wc { font-size: 11px; color: var(--text-3); font-family: var(--font-mono); text-align: right; padding-top: 3px; }
 
 </style>
 </head>
@@ -620,70 +838,90 @@
       <div class="nav-section-label">Principal</div>
 
       <button class="nav-item active" onclick="switchMode('humanize')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M2 4h12M2 8h8M2 12h10"/>
-        </svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h10"/></svg>
         Humanizar texto
       </button>
 
       <button class="nav-item" onclick="switchMode('paraphrase')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M4 3l-2 5 2 5M12 3l2 5-2 5M6 8h4"/>
-        </svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 3l-2 5 2 5M12 3l2 5-2 5M6 8h4"/></svg>
         Parafrasear
       </button>
 
       <button class="nav-item" onclick="switchMode('rewrite')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="2" y="2" width="12" height="12" rx="1"/>
-          <path d="M5 5h6M5 8h4M5 11h5"/>
-        </svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 5h6M5 8h4M5 11h5"/></svg>
         Reescribir por tipo
       </button>
 
       <button class="nav-item" onclick="switchMode('style')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="8" cy="8" r="3"/>
-          <path d="M8 1v2M8 13v2M1 8h2M13 8h2"/>
-        </svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
         Adaptador de estilo
       </button>
 
       <div class="nav-section-label">Análisis</div>
 
       <button class="nav-item" onclick="switchMode('coherence')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M2 12L6 6l3 4 2-3 3 5"/>
-        </svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L6 6l3 4 2-3 3 5"/></svg>
         Coherencia narrativa
       </button>
 
       <div class="nav-section-label">Fuentes</div>
 
       <button class="nav-item" onclick="switchMode('citations')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/>
-          <path d="M5 6h6M5 9h4"/>
-        </svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M5 6h6M5 9h4"/></svg>
         Gestión de citas
       </button>
 
       <button class="nav-item" onclick="switchMode('verify')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="7" cy="7" r="5"/>
-          <path d="M12 12l3 3"/>
-        </svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M12 12l3 3"/></svg>
         Verificar fuentes
       </button>
 
       <button class="nav-item" onclick="switchMode('multilang')">
-        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="8" cy="8" r="6"/>
-          <path d="M8 2c-2 2-3 3.5-3 6s1 4 3 6M8 2c2 2 3 3.5 3 6s-1 4-3 6M2 8h12"/>
-        </svg>
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 2c-2 2-3 3.5-3 6s1 4 3 6M8 2c2 2 3 3.5 3 6s-1 4-3 6M2 8h12"/></svg>
         Multilingüismo
       </button>
     </nav>
+
+    <!-- ── THEME PANEL ── -->
+    <div class="theme-panel">
+      <div class="theme-panel-title">Apariencia</div>
+
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="btn-light" onclick="setTheme('light')">Claro</button>
+        <button class="mode-btn" id="btn-dark"  onclick="setTheme('dark')">Oscuro</button>
+      </div>
+
+      <div class="palette-list">
+        <button class="palette-option active" id="sw-mono"  onclick="setPalette('mono')">
+          <div class="palette-dot-wrap"><span class="palette-dot dot-mono"></span></div>
+          <span class="palette-name">Mono</span>
+        </button>
+        <button class="palette-option" id="sw-beige" onclick="setPalette('beige')">
+          <div class="palette-dot-wrap"><span class="palette-dot dot-beige"></span></div>
+          <span class="palette-name">Beige</span>
+        </button>
+        <button class="palette-option" id="sw-slate" onclick="setPalette('slate')">
+          <div class="palette-dot-wrap"><span class="palette-dot dot-slate"></span></div>
+          <span class="palette-name">Slate</span>
+        </button>
+        <button class="palette-option" id="sw-sage"  onclick="setPalette('sage')">
+          <div class="palette-dot-wrap"><span class="palette-dot dot-sage"></span></div>
+          <span class="palette-name">Sage</span>
+        </button>
+        <button class="palette-option" id="sw-rose"  onclick="setPalette('rose')">
+          <div class="palette-dot-wrap"><span class="palette-dot dot-rose"></span></div>
+          <span class="palette-name">Rose</span>
+        </button>
+        <button class="palette-option" id="sw-dusk"  onclick="setPalette('dusk')">
+          <div class="palette-dot-wrap"><span class="palette-dot dot-dusk"></span></div>
+          <span class="palette-name">Dusk</span>
+        </button>
+        <button class="palette-option" id="sw-ink"   onclick="setPalette('ink')">
+          <div class="palette-dot-wrap"><span class="palette-dot dot-ink"></span></div>
+          <span class="palette-name">Ink</span>
+        </button>
+      </div>
+    </div>
 
     <div class="sidebar-footer">clarity / v1.0</div>
   </aside>
@@ -691,7 +929,6 @@
   <!-- ── MAIN ── -->
   <main class="main">
 
-    <!-- Header -->
     <div class="main-header" id="modeHeader">
       <div>
         <div class="mode-title" id="modeTitle">Humanizar texto</div>
@@ -821,7 +1058,7 @@
       <!-- STYLE ADAPTER -->
       <div class="panel-view" id="view-style">
         <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
-          <p style="font-size:13px;color:var(--gray-400);font-weight:300;">Pega un texto de referencia cuyo estilo quieras imitar, luego pega el texto que debe adaptarse a ese estilo.</p>
+          <p style="font-size:13px;color:var(--text-3);font-weight:300;">Pega un texto de referencia cuyo estilo quieras imitar, luego pega el texto que debe adaptarse a ese estilo.</p>
           <div class="reference-area">
             <div class="column">
               <div class="column-label">Texto de referencia (estilo)</div>
@@ -891,8 +1128,7 @@
               <option value="thesis">Tesis/disertación</option>
             </select>
           </div>
-
-          <div class="form-grid" id="citFields">
+          <div class="form-grid">
             <div class="field-group">
               <label class="field-label">Autor(es)</label>
               <input class="input" id="cit-author" placeholder="Apellido, Nombre">
@@ -914,12 +1150,10 @@
               <input class="input" id="cit-extra" placeholder="doi:10.xxx o pp. 12–34">
             </div>
           </div>
-
           <div>
             <div class="column-label" style="margin-bottom:8px;">Cita generada</div>
             <div class="citation-output" id="cit-output" style="min-height:52px;">—</div>
           </div>
-
           <div style="margin-top:auto;">
             <div class="column-label" style="margin-bottom:8px;">Texto con cita en contexto</div>
             <textarea class="textarea" id="cit-context" placeholder="Opcional: pega aquí el párrafo donde quieres insertar la cita. Clarity la integrará correctamente." style="min-height:80px;"></textarea>
@@ -934,7 +1168,7 @@
       <!-- VERIFY -->
       <div class="panel-view" id="view-verify">
         <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
-          <p style="font-size:13px;color:var(--gray-400);font-weight:300;">Analiza si una fuente parece legítima, detecta señales de riesgo y sugiere alternativas verificables.</p>
+          <p style="font-size:13px;color:var(--text-3);font-weight:300;">Analiza si una fuente parece legítima, detecta señales de riesgo y sugiere alternativas verificables.</p>
           <div class="field-group">
             <label class="field-label">URL o nombre de la fuente</label>
             <input class="input" id="vf-url" placeholder="https://... o nombre del artículo / revista">
@@ -1003,9 +1237,7 @@
 
 <script>
 // ── CONFIG ──
-const OPENROUTER_API_KEY = "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";
-// openrouter/free: router oficial gratuito de OpenRouter (selecciona el mejor modelo libre disponible)
-// Los siguientes son fallbacks con modelos :free confirmados activos en marzo 2026
+const OPENROUTER_API_KEY = "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";
 const FREE_MODELS = [
   "openrouter/free",
   "meta-llama/llama-4-scout:free",
@@ -1013,6 +1245,30 @@ const FREE_MODELS = [
   "deepseek/deepseek-r1:free",
   "google/gemma-3-27b-it:free"
 ];
+
+// ── THEME SYSTEM ──
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('btn-light').classList.toggle('active', theme === 'light');
+  document.getElementById('btn-dark').classList.toggle('active',  theme === 'dark');
+  localStorage.setItem('clarity-theme', theme);
+}
+
+function setPalette(palette) {
+  document.documentElement.setAttribute('data-palette', palette);
+  ['mono','beige','slate','sage','rose','dusk','ink'].forEach(p => {
+    document.getElementById('sw-' + p).classList.toggle('active', p === palette);
+  });
+  localStorage.setItem('clarity-palette', palette);
+}
+
+// Restore saved preferences
+(function() {
+  const t = localStorage.getItem('clarity-theme');
+  const p = localStorage.getItem('clarity-palette');
+  if (t) setTheme(t);
+  if (p) setPalette(p);
+})();
 
 // ── MODE CONFIG ──
 const modes = {
@@ -1036,7 +1292,6 @@ function switchMode(mode) {
   document.getElementById('view-' + mode).classList.add('active');
   document.getElementById('modeTitle').textContent = modes[mode].title;
   document.getElementById('modeDesc').textContent = modes[mode].desc;
-  // hide run btn for citations (live) 
   document.getElementById('runBtn').style.display = mode === 'citations' ? 'none' : '';
 }
 
@@ -1076,7 +1331,7 @@ async function callLLM(systemPrompt, userContent, modelIndex = 0) {
         max_tokens: 2048,
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: userContent }
+          { role: "user",   content: userContent }
         ]
       })
     });
@@ -1084,40 +1339,42 @@ async function callLLM(systemPrompt, userContent, modelIndex = 0) {
     throw new Error("Error de red. Verifica tu conexión.");
   }
 
+  // Parse response regardless of status
+  const data = await res.json().catch(() => ({}));
+
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    const msg = err.error?.message || `Error ${res.status}`;
-    // Si es error de proveedor o rate limit, probar el siguiente modelo
-    if (res.status === 429 || res.status === 502 || res.status === 503 || msg.toLowerCase().includes("provider")) {
-      console.warn(`Modelo ${model} falló (${msg}), probando siguiente...`);
-      return callLLM(systemPrompt, userContent, modelIndex + 1);
-    }
-    throw new Error(msg);
+    const msg = (data.error?.message || data.error?.code || String(res.status)).toLowerCase();
+    const shouldFallback =
+      res.status === 429 || res.status === 502 || res.status === 503 ||
+      res.status === 404 || res.status === 400 ||
+      msg.includes("no endpoints") || msg.includes("provider") ||
+      msg.includes("capacity") || msg.includes("overloaded") ||
+      msg.includes("unavailable") || msg.includes("not found");
+    if (shouldFallback) return callLLM(systemPrompt, userContent, modelIndex + 1);
+    throw new Error(data.error?.message || `Error ${res.status}`);
   }
 
-  const data = await res.json();
   const content = data.choices?.[0]?.message?.content?.trim();
-  if (!content) {
-    console.warn(`Modelo ${model} devolvió vacío, probando siguiente...`);
-    return callLLM(systemPrompt, userContent, modelIndex + 1);
-  }
+  if (!content) return callLLM(systemPrompt, userContent, modelIndex + 1);
   return content;
 }
 
+// ── MARKDOWN STRIP ──
 function stripMarkdown(text) {
   return text
-    .replace(/\*\*(.+?)\*\*/g, '$1')       // **negrita**
-    .replace(/\*(.+?)\*/g, '$1')            // *cursiva*
-    .replace(/_{1,2}(.+?)_{1,2}/g, '$1')   // _cursiva_ o __negrita__
-    .replace(/#{1,6}\s+/gm, '')             // # encabezados
-    .replace(/`{1,3}[^`]*`{1,3}/g, (m) => m.replace(/`/g,'')) // `código`
-    .replace(/^\s*[-*+]\s+/gm, '• ')       // listas con guion/asterisco → bullet limpio
-    .replace(/^\s*\d+\.\s+/gm, '')         // listas numeradas
-    .replace(/\[(.+?)\]\(.+?\)/g, '$1')    // [texto](url) → texto
-    .replace(/\n{3,}/g, '\n\n')            // más de dos saltos → dos
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/_{1,2}(.+?)_{1,2}/g, '$1')
+    .replace(/#{1,6}\s+/gm, '')
+    .replace(/`{1,3}[^`]*`{1,3}/g, m => m.replace(/`/g,''))
+    .replace(/^\s*[-*+]\s+/gm, '• ')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+    .replace(/\n{3,}/g, '\n\n')
     .trim();
 }
 
+// ── OUTPUT ──
 function setOutput(id, text) {
   const clean = stripMarkdown(text);
   const el = document.getElementById(id);
@@ -1134,8 +1391,12 @@ function setOutput(id, text) {
   el.classList.add('fade-in');
 }
 
+function setLoading(outputId) {
+  const el = document.getElementById(outputId);
+  if(el) el.innerHTML = '<div class="thinking">Procesando...</div>';
+}
+
 function setStatus(msg) {
-  // solo mostrar errores reales en consola, nada visible al usuario
   if (msg) console.warn('Clarity:', msg);
 }
 
@@ -1157,32 +1418,27 @@ function clearAll() {
   });
   const co = document.getElementById('cit-output');
   if(co) co.textContent = '—';
+  document.getElementById('co-scores').style.display = 'none';
   ['h-wc','p-wc','rw-wc','co-wc','ml-wc'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.textContent = '0 palabras';
   });
 }
 
-function setLoading(outputId) {
-  const el = document.getElementById(outputId);
-  if(el) el.innerHTML = '<div class="thinking">Procesando...</div>';
-}
-
-// ── HUMANIZE SYSTEM PROMPT ──
+// ── HUMANIZE PROMPT ──
 function buildHumanizePrompt(contentType, intensity) {
   const intensityMap = {
-    light: "Haz solo correcciones mínimas: elimina frases de relleno obvias, adjetivos inflados y artefactos de chatbot. Preserva el máximo del original.",
+    light:    "Haz solo correcciones mínimas: elimina frases de relleno obvias, adjetivos inflados y artefactos de chatbot. Preserva el máximo del original.",
     standard: "Corrige todos los patrones detectados. Reescribe oraciones donde sea necesario. Conserva la estructura general.",
-    deep: "Reescritura completa para voz natural. Reestructura párrafos si hace falta. Varía el ritmo oracional. Sé específico."
+    deep:     "Reescritura completa para voz natural. Reestructura párrafos si hace falta. Varía el ritmo oracional. Sé específico."
   };
   const typeMap = {
-    blog: "Es un post de blog o artículo. Aplica personalidad completa, opiniones, ritmo variado.",
-    readme: "Es un README o documentación de proyecto. Ligera personalidad. Elimina inflación y buzzwords.",
-    academic: "Es texto académico. Sin personalidad ni opiniones. Solo precisión y fluidez.",
+    blog:      "Es un post de blog o artículo. Aplica personalidad completa, opiniones, ritmo variado.",
+    readme:    "Es un README o documentación de proyecto. Ligera personalidad. Elimina inflación y buzzwords.",
+    academic:  "Es texto académico. Sin personalidad ni opiniones. Solo precisión y fluidez.",
     technical: "Es documentación técnica. Cero personalidad. Elimina relleno y sobreexplicación.",
-    pr: "Es descripción de PR, commit o changelog. Brevedad máxima. Elimina relleno."
+    pr:        "Es descripción de PR, commit o changelog. Brevedad máxima. Elimina relleno."
   };
-
   return `Eres un experto en reescritura de textos con el objetivo de eliminar señales de texto generado por IA. Tu única salida es el texto reescrito, sin comentarios, explicaciones ni metadatos.
 
 TIPO DE CONTENIDO: ${typeMap[contentType] || typeMap.blog}
@@ -1207,79 +1463,61 @@ REGLAS:
 async function runCurrent() {
   const btn = document.getElementById('runBtn');
   btn.disabled = true;
-  setStatus('');
 
   try {
     if(currentMode === 'humanize') {
       const input = document.getElementById('h-input').value.trim();
-      if(!input) { setLoading('h-output'); document.getElementById('h-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
-      const ct = document.getElementById('h-contentType').value;
-      const intensity = document.getElementById('h-intensity').value;
+      if(!input) { document.getElementById('h-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
       setLoading('h-output');
-      const result = await callLLM(buildHumanizePrompt(ct, intensity), input);
+      const result = await callLLM(buildHumanizePrompt(
+        document.getElementById('h-contentType').value,
+        document.getElementById('h-intensity').value
+      ), input);
       setOutput('h-output', result);
 
     } else if(currentMode === 'paraphrase') {
       const input = document.getElementById('p-input').value.trim();
       if(!input) { document.getElementById('p-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
-      const register = document.getElementById('p-register').value;
-      const priority = document.getElementById('p-priority').value;
-      const registerMap = { formal: "formal y profesional", academic: "académico y riguroso", casual: "casual y cercano", neutral: "neutro y claro" };
-      const priorityMap = { naturalness: "naturalidad de lectura", concision: "máxima concisión", clarity: "claridad extrema", variety: "variedad léxica" };
-      const sys = `Eres un experto en paráfrasis. Reformula el texto en registro ${registerMap[register]}, priorizando ${priorityMap[priority]}. No pierdas ningún dato ni argumento del original. Devuelve SOLO la paráfrasis, sin comentarios.`;
+      const registerMap = { formal:"formal y profesional", academic:"académico y riguroso", casual:"casual y cercano", neutral:"neutro y claro" };
+      const priorityMap = { naturalness:"naturalidad de lectura", concision:"máxima concisión", clarity:"claridad extrema", variety:"variedad léxica" };
+      const sys = `Eres un experto en paráfrasis. Reformula el texto en registro ${registerMap[document.getElementById('p-register').value]}, priorizando ${priorityMap[document.getElementById('p-priority').value]}. No pierdas ningún dato ni argumento del original. Devuelve SOLO la paráfrasis, sin comentarios.`;
       setLoading('p-output');
-      const result = await callLLM(sys, input);
-      setOutput('p-output', result);
+      setOutput('p-output', await callLLM(sys, input));
 
     } else if(currentMode === 'rewrite') {
       const input = document.getElementById('rw-input').value.trim();
       if(!input) { document.getElementById('rw-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
-      const type = document.getElementById('rw-type').value;
-      const length = document.getElementById('rw-length').value;
-      const typeMap = {
-        essay: "ensayo académico formal con tesis, desarrollo argumentado y conclusión",
-        email: "correo profesional directo, con saludo, cuerpo breve y cierre",
-        report: "informe ejecutivo con puntos clave destacados y lenguaje preciso",
-        blogpost: "post de blog con tono conversacional, párrafos cortos y gancho inicial",
-        summary: "resumen ejecutivo en 3-5 puntos esenciales",
-        linkedin: "publicación de LinkedIn profesional pero personal, con llamada a la acción"
-      };
-      const lengthMap = { same: "extensión similar al original", shorter: "30-40% más corto que el original", longer: "30-40% más extenso que el original" };
-      const sys = `Eres un escritor profesional experto en adaptar textos. Reescribe el texto como ${typeMap[type]}. Extensión: ${lengthMap[length]}. Preserva todos los datos e ideas del original. Devuelve SOLO el texto reescrito, sin comentarios.`;
+      const typeMap = { essay:"ensayo académico formal con tesis, desarrollo argumentado y conclusión", email:"correo profesional directo, con saludo, cuerpo breve y cierre", report:"informe ejecutivo con puntos clave destacados y lenguaje preciso", blogpost:"post de blog con tono conversacional, párrafos cortos y gancho inicial", summary:"resumen ejecutivo en 3-5 puntos esenciales", linkedin:"publicación de LinkedIn profesional pero personal, con llamada a la acción" };
+      const lengthMap = { same:"extensión similar al original", shorter:"30-40% más corto que el original", longer:"30-40% más extenso que el original" };
+      const sys = `Eres un escritor profesional experto en adaptar textos. Reescribe el texto como ${typeMap[document.getElementById('rw-type').value]}. Extensión: ${lengthMap[document.getElementById('rw-length').value]}. Preserva todos los datos e ideas del original. Devuelve SOLO el texto reescrito, sin comentarios.`;
       setLoading('rw-output');
-      const result = await callLLM(sys, input);
-      setOutput('rw-output', result);
+      setOutput('rw-output', await callLLM(sys, input));
 
     } else if(currentMode === 'style') {
       const ref = document.getElementById('st-ref').value.trim();
       const input = document.getElementById('st-input').value.trim();
       if(!ref || !input) { document.getElementById('st-output').innerHTML = '<span class="output-placeholder">Necesitas los dos textos para continuar.</span>'; return; }
-      const sys = `Eres un experto en análisis y adaptación de estilo. Analiza el estilo, voz, tono, ritmo oracional y léxico del texto de referencia. Luego reescribe el texto a adaptar usando ese mismo estilo pero preservando su contenido e ideas completamente. Devuelve SOLO el texto adaptado.`;
       setLoading('st-output');
-      const result = await callLLM(sys, `TEXTO DE REFERENCIA (estilo a imitar):\n${ref}\n\nTEXTO A ADAPTAR:\n${input}`);
-      setOutput('st-output', result);
+      setOutput('st-output', await callLLM(
+        `Eres un experto en análisis y adaptación de estilo. Analiza el estilo, voz, tono, ritmo oracional y léxico del texto de referencia. Luego reescribe el texto a adaptar usando ese mismo estilo pero preservando su contenido e ideas completamente. Devuelve SOLO el texto adaptado.`,
+        `TEXTO DE REFERENCIA (estilo a imitar):\n${ref}\n\nTEXTO A ADAPTAR:\n${input}`
+      ));
 
     } else if(currentMode === 'coherence') {
       const input = document.getElementById('co-input').value.trim();
       if(!input) { document.getElementById('co-output').innerHTML = '<span class="output-placeholder">Pega el texto a analizar.</span>'; return; }
-      const sys = `Eres un experto en análisis de escritura. Analiza el texto en estas dimensiones y devuelve SOLO un JSON con este formato exacto, sin markdown ni explicaciones:
-{"coherence": <0-100>, "flow": <0-100>, "structure": <0-100>, "analysis": "<análisis narrativo de 150-200 palabras que explica los hallazgos, señala problemas específicos con citas del texto y da recomendaciones concretas>"}`;
       setLoading('co-output');
-      const raw = await callLLM(sys, input);
+      const raw = await callLLM(
+        `Eres un experto en análisis de escritura. Analiza el texto y devuelve SOLO un JSON con este formato exacto, sin markdown ni explicaciones:\n{"coherence":<0-100>,"flow":<0-100>,"structure":<0-100>,"analysis":"<análisis narrativo de 150-200 palabras>"}`,
+        input
+      );
       let parsed;
-      try {
-        const clean = raw.replace(/```json|```/g,'').trim();
-        parsed = JSON.parse(clean);
-      } catch(e) {
-        setOutput('co-output', raw);
-        return;
-      }
-      const grid = document.getElementById('co-score-grid');
-      grid.innerHTML = `
+      try { parsed = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+      catch(e) { setOutput('co-output', raw); return; }
+      document.getElementById('co-score-grid').innerHTML = `
         <div class="score-card"><div class="score-number">${parsed.coherence}</div><div class="score-label">Coherencia</div></div>
         <div class="score-card"><div class="score-number">${parsed.flow}</div><div class="score-label">Fluidez</div></div>
-        <div class="score-card"><div class="score-number">${parsed.structure}</div><div class="score-label">Estructura</div></div>
-      `;
+        <div class="score-card"><div class="score-number">${parsed.structure}</div><div class="score-label">Estructura</div></div>`;
       document.getElementById('co-scores').style.display = 'block';
       setOutput('co-output', stripMarkdown(parsed.analysis || ''));
 
@@ -1287,79 +1525,72 @@ async function runCurrent() {
       const url = document.getElementById('vf-url').value.trim();
       if(!url) { document.getElementById('vf-output').innerHTML = '<span class="output-placeholder">Ingresa una URL o nombre de fuente.</span>'; return; }
       const context = document.getElementById('vf-context').value.trim();
-      const sys = `Eres un bibliotecario académico y fact-checker experto. Analiza la fuente indicada y evalúa: credibilidad del dominio/institución, señales de riesgo (sitio predatorio, sin revisión por pares, sin autoría clara, sin fecha, contenido de mala calidad), y sugiere fuentes alternativas verificables si aplica. Sé directo y específico. Estructura tu respuesta en: EVALUACIÓN, SEÑALES DE RIESGO y ALTERNATIVAS SUGERIDAS.`;
       setLoading('vf-output');
-      const userMsg = url + (context ? `\nContexto: ${context}` : '');
-      const result = await callLLM(sys, userMsg);
-      setOutput('vf-output', result);
+      setOutput('vf-output', await callLLM(
+        `Eres un bibliotecario académico y fact-checker experto. Analiza la fuente indicada y evalúa: credibilidad del dominio/institución, señales de riesgo (sitio predatorio, sin revisión por pares, sin autoría clara, sin fecha, contenido de mala calidad), y sugiere fuentes alternativas verificables si aplica. Sé directo y específico. Estructura tu respuesta en: EVALUACIÓN, SEÑALES DE RIESGO y ALTERNATIVAS SUGERIDAS.`,
+        url + (context ? `\nContexto: ${context}` : '')
+      ));
 
     } else if(currentMode === 'multilang') {
       const input = document.getElementById('ml-input').value.trim();
       if(!input) { document.getElementById('ml-output').innerHTML = '<span class="output-placeholder">Pega el texto a procesar.</span>'; return; }
-      const from = document.getElementById('ml-from').value;
-      const to = document.getElementById('ml-to').value;
-      const task = document.getElementById('ml-task').value;
       const langNames = { es:'español', en:'inglés', fr:'francés', de:'alemán', pt:'portugués', it:'italiano', auto:'el idioma detectado' };
+      const from = document.getElementById('ml-from').value;
+      const to   = document.getElementById('ml-to').value;
+      const task = document.getElementById('ml-task').value;
       let instruction;
-      if(task === 'translate') instruction = `Traduce del ${langNames[from] || from} al ${langNames[to]}. Mantén el registro, el tono y la estructura del original. Sin comentarios.`;
-      else if(task === 'translate_humanize') instruction = `Traduce del ${langNames[from] || from} al ${langNames[to]} y elimina cualquier rastro de texto generado por IA: lenguaje inflado, frases de relleno, estructuras artificiosas. El resultado debe sonar natural y humano en ${langNames[to]}. Sin comentarios.`;
-      else instruction = `Adapta culturalmente el texto del ${langNames[from] || from} al ${langNames[to]}: no solo traduce las palabras sino los referentes culturales, ejemplos, expresiones idiomáticas y convenciones comunicativas. Sin comentarios.`;
+      if(task === 'translate') instruction = `Traduce del ${langNames[from]||from} al ${langNames[to]}. Mantén el registro, el tono y la estructura del original. Sin comentarios.`;
+      else if(task === 'translate_humanize') instruction = `Traduce del ${langNames[from]||from} al ${langNames[to]} y elimina cualquier rastro de texto generado por IA: lenguaje inflado, frases de relleno, estructuras artificiosas. El resultado debe sonar natural y humano en ${langNames[to]}. Sin comentarios.`;
+      else instruction = `Adapta culturalmente el texto del ${langNames[from]||from} al ${langNames[to]}: no solo traduce las palabras sino los referentes culturales, ejemplos, expresiones idiomáticas y convenciones comunicativas. Sin comentarios.`;
       setLoading('ml-output');
-      const result = await callLLM(instruction, input);
-      setOutput('ml-output', result);
+      setOutput('ml-output', await callLLM(instruction, input));
     }
 
-    setStatus('');
   } catch(err) {
     const outputs = { humanize:'h-output', paraphrase:'p-output', rewrite:'rw-output', style:'st-output', coherence:'co-output', verify:'vf-output', multilang:'ml-output' };
     const outId = outputs[currentMode];
-    if(outId) {
-      const el = document.getElementById(outId);
-      if(el) el.innerHTML = `<span style="color:#999;font-size:13px;font-family:var(--font-mono);">No se pudo procesar. Intenta de nuevo en unos segundos.</span>`;
-    }
+    if(outId) document.getElementById(outId).innerHTML = `<span style="color:var(--text-3);font-size:13px;font-family:var(--font-mono);">No se pudo procesar. Intenta de nuevo en unos segundos.</span>`;
   } finally {
     btn.disabled = false;
   }
 }
 
-// ── CITATIONS (live generation on input) ──
+// ── CITATIONS (live) ──
 let citTimeout;
-document.querySelectorAll('#cit-author, #cit-year, #cit-title, #cit-source, #cit-extra').forEach(el => {
-  el.addEventListener('input', () => {
-    clearTimeout(citTimeout);
-    citTimeout = setTimeout(generateCitation, 800);
-  });
+document.querySelectorAll('#cit-author,#cit-year,#cit-title,#cit-source,#cit-extra').forEach(el => {
+  el.addEventListener('input', () => { clearTimeout(citTimeout); citTimeout = setTimeout(generateCitation, 800); });
 });
 document.getElementById('cit-format').addEventListener('change', generateCitation);
 document.getElementById('cit-type').addEventListener('change', generateCitation);
 
 async function generateCitation() {
-  const format = document.getElementById('cit-format').value;
-  const type = document.getElementById('cit-type').value;
   const author = document.getElementById('cit-author').value.trim();
-  const year = document.getElementById('cit-year').value.trim();
-  const title = document.getElementById('cit-title').value.trim();
+  const year   = document.getElementById('cit-year').value.trim();
+  const title  = document.getElementById('cit-title').value.trim();
   const source = document.getElementById('cit-source').value.trim();
-  const extra = document.getElementById('cit-extra').value.trim();
+  const extra  = document.getElementById('cit-extra').value.trim();
+  const format = document.getElementById('cit-format').value;
+  const type   = document.getElementById('cit-type').value;
   if(!title && !author) return;
 
   const citOut = document.getElementById('cit-output');
   citOut.textContent = 'Generando...';
 
-  const sys = `Eres un experto en normas bibliográficas. Genera una cita en formato ${format} para una fuente de tipo "${type}". Devuelve SOLO la cita formateada, sin explicación ni metadatos.`;
-  const userMsg = `Autor: ${author || 'N/A'}\nAño: ${year || 'N/A'}\nTítulo: ${title || 'N/A'}\nFuente/Editorial: ${source || 'N/A'}\nDOI/Páginas: ${extra || 'N/A'}`;
   try {
-    const result = await callLLM(sys, userMsg);
+    const result = await callLLM(
+      `Eres un experto en normas bibliográficas. Genera una cita en formato ${format} para una fuente de tipo "${type}". Devuelve SOLO la cita formateada, sin explicación ni metadatos.`,
+      `Autor: ${author||'N/A'}\nAño: ${year||'N/A'}\nTítulo: ${title||'N/A'}\nFuente/Editorial: ${source||'N/A'}\nDOI/Páginas: ${extra||'N/A'}`
+    );
     citOut.textContent = stripMarkdown(result);
 
-    // If context provided, integrate citation
     const ctx = document.getElementById('cit-context').value.trim();
     if(ctx) {
       const ctxOut = document.getElementById('cit-ctx-output');
       ctxOut.innerHTML = '<div class="thinking">Integrando cita...</div>';
-      const ctxSys = `Integra la siguiente cita bibliográfica en el párrafo de forma natural, siguiendo las convenciones de ${format}. Devuelve SOLO el párrafo con la cita integrada.`;
-      const ctxResult = await callLLM(ctxSys, `PÁRRAFO:\n${ctx}\n\nCITA:\n${result}`);
-      setOutput('cit-ctx-output', ctxResult);
+      setOutput('cit-ctx-output', await callLLM(
+        `Integra la siguiente cita bibliográfica en el párrafo de forma natural, siguiendo las convenciones de ${format}. Devuelve SOLO el párrafo con la cita integrada.`,
+        `PÁRRAFO:\n${ctx}\n\nCITA:\n${result}`
+      ));
     }
   } catch(e) {
     citOut.textContent = 'No se pudo generar. Intenta de nuevo.';
@@ -1367,12 +1598,11 @@ async function generateCitation() {
 }
 
 document.getElementById('cit-context').addEventListener('blur', () => {
-  const title = document.getElementById('cit-title').value.trim();
-  if(title) generateCitation();
+  if(document.getElementById('cit-title').value.trim()) generateCitation();
 });
 
-// ── RUN ON ENTER (ctrl+enter) ──
-document.addEventListener('keydown', (e) => {
+// ── CTRL+ENTER ──
+document.addEventListener('keydown', e => {
   if(e.ctrlKey && e.key === 'Enter') runCurrent();
 });
 
