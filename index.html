@@ -593,13 +593,6 @@
   .panel-view { display: none; }
   .panel-view.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
 
-  /* ── INLINE STATUS ── */
-  .status-line {
-    font-size: 11.5px;
-    font-family: var(--font-mono);
-    color: var(--gray-400);
-    min-height: 18px;
-  }
 
   /* Word count */
   .wc {
@@ -1043,7 +1036,6 @@ function switchMode(mode) {
   document.getElementById('view-' + mode).classList.add('active');
   document.getElementById('modeTitle').textContent = modes[mode].title;
   document.getElementById('modeDesc').textContent = modes[mode].desc;
-  document.getElementById('globalStatus').textContent = '';
   // hide run btn for citations (live) 
   document.getElementById('runBtn').style.display = mode === 'citations' ? 'none' : '';
 }
@@ -1165,7 +1157,6 @@ function clearAll() {
   });
   const co = document.getElementById('cit-output');
   if(co) co.textContent = '—';
-  document.getElementById('globalStatus').textContent = '';
   ['h-wc','p-wc','rw-wc','co-wc','ml-wc'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.textContent = '0 palabras';
@@ -1221,7 +1212,7 @@ async function runCurrent() {
   try {
     if(currentMode === 'humanize') {
       const input = document.getElementById('h-input').value.trim();
-      if(!input) { setStatus('Escribe o pega texto primero.'); return; }
+      if(!input) { setLoading('h-output'); document.getElementById('h-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
       const ct = document.getElementById('h-contentType').value;
       const intensity = document.getElementById('h-intensity').value;
       setLoading('h-output');
@@ -1230,7 +1221,7 @@ async function runCurrent() {
 
     } else if(currentMode === 'paraphrase') {
       const input = document.getElementById('p-input').value.trim();
-      if(!input) { setStatus('Escribe o pega texto primero.'); return; }
+      if(!input) { document.getElementById('p-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
       const register = document.getElementById('p-register').value;
       const priority = document.getElementById('p-priority').value;
       const registerMap = { formal: "formal y profesional", academic: "académico y riguroso", casual: "casual y cercano", neutral: "neutro y claro" };
@@ -1242,7 +1233,7 @@ async function runCurrent() {
 
     } else if(currentMode === 'rewrite') {
       const input = document.getElementById('rw-input').value.trim();
-      if(!input) { setStatus('Escribe o pega texto primero.'); return; }
+      if(!input) { document.getElementById('rw-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
       const type = document.getElementById('rw-type').value;
       const length = document.getElementById('rw-length').value;
       const typeMap = {
@@ -1262,7 +1253,7 @@ async function runCurrent() {
     } else if(currentMode === 'style') {
       const ref = document.getElementById('st-ref').value.trim();
       const input = document.getElementById('st-input').value.trim();
-      if(!ref || !input) { setStatus('Necesitas los dos textos.'); return; }
+      if(!ref || !input) { document.getElementById('st-output').innerHTML = '<span class="output-placeholder">Necesitas los dos textos para continuar.</span>'; return; }
       const sys = `Eres un experto en análisis y adaptación de estilo. Analiza el estilo, voz, tono, ritmo oracional y léxico del texto de referencia. Luego reescribe el texto a adaptar usando ese mismo estilo pero preservando su contenido e ideas completamente. Devuelve SOLO el texto adaptado.`;
       setLoading('st-output');
       const result = await callLLM(sys, `TEXTO DE REFERENCIA (estilo a imitar):\n${ref}\n\nTEXTO A ADAPTAR:\n${input}`);
@@ -1270,7 +1261,7 @@ async function runCurrent() {
 
     } else if(currentMode === 'coherence') {
       const input = document.getElementById('co-input').value.trim();
-      if(!input) { setStatus('Pega el texto a analizar.'); return; }
+      if(!input) { document.getElementById('co-output').innerHTML = '<span class="output-placeholder">Pega el texto a analizar.</span>'; return; }
       const sys = `Eres un experto en análisis de escritura. Analiza el texto en estas dimensiones y devuelve SOLO un JSON con este formato exacto, sin markdown ni explicaciones:
 {"coherence": <0-100>, "flow": <0-100>, "structure": <0-100>, "analysis": "<análisis narrativo de 150-200 palabras que explica los hallazgos, señala problemas específicos con citas del texto y da recomendaciones concretas>"}`;
       setLoading('co-output');
@@ -1294,7 +1285,7 @@ async function runCurrent() {
 
     } else if(currentMode === 'verify') {
       const url = document.getElementById('vf-url').value.trim();
-      if(!url) { setStatus('Ingresa una URL o nombre de fuente.'); return; }
+      if(!url) { document.getElementById('vf-output').innerHTML = '<span class="output-placeholder">Ingresa una URL o nombre de fuente.</span>'; return; }
       const context = document.getElementById('vf-context').value.trim();
       const sys = `Eres un bibliotecario académico y fact-checker experto. Analiza la fuente indicada y evalúa: credibilidad del dominio/institución, señales de riesgo (sitio predatorio, sin revisión por pares, sin autoría clara, sin fecha, contenido de mala calidad), y sugiere fuentes alternativas verificables si aplica. Sé directo y específico. Estructura tu respuesta en: EVALUACIÓN, SEÑALES DE RIESGO y ALTERNATIVAS SUGERIDAS.`;
       setLoading('vf-output');
@@ -1304,7 +1295,7 @@ async function runCurrent() {
 
     } else if(currentMode === 'multilang') {
       const input = document.getElementById('ml-input').value.trim();
-      if(!input) { setStatus('Pega el texto a procesar.'); return; }
+      if(!input) { document.getElementById('ml-output').innerHTML = '<span class="output-placeholder">Pega el texto a procesar.</span>'; return; }
       const from = document.getElementById('ml-from').value;
       const to = document.getElementById('ml-to').value;
       const task = document.getElementById('ml-task').value;
@@ -1371,7 +1362,7 @@ async function generateCitation() {
       setOutput('cit-ctx-output', ctxResult);
     }
   } catch(e) {
-    citOut.textContent = 'Error: ' + e.message;
+    citOut.textContent = 'No se pudo generar. Intenta de nuevo.';
   }
 }
 
