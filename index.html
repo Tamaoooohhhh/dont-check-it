@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clarity — Escritura sin ruido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --white: #fafafa;
+    --gray-100: #f0f0f0;
+    --gray-200: #d8d8d8;
+    --gray-400: #999;
+    --gray-600: #555;
+    --gray-800: #222;
+    --accent: #0a0a0a;
+    --sidebar-w: 260px;
+    --font-display: 'DM Serif Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --radius: 4px;
+    --transition: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--white);
+    color: var(--black);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── LAYOUT ── */
+  .app {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--black);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+  }
+
+  .sidebar-header {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .logo {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    font-weight: 300;
+    font-family: var(--font-mono);
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 0;
+    scrollbar-width: none;
+  }
+  .sidebar-nav::-webkit-scrollbar { display: none; }
+
+  .nav-section-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    font-family: var(--font-mono);
+    padding: 12px 24px 6px;
+    font-weight: 400;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 24px;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+    color: rgba(255,255,255,0.5);
+    font-size: 13.5px;
+    font-weight: 400;
+    position: relative;
+    user-select: none;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.85);
+  }
+
+  .nav-item.active {
+    color: var(--white);
+    background: rgba(255,255,255,0.1);
+  }
+
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--white);
+  }
+
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .nav-item.active .nav-icon { opacity: 1; }
+
+  .sidebar-footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    font-family: var(--font-mono);
+  }
+
+  /* ── MAIN ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--white);
+  }
+
+  .main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 36px;
+    border-bottom: 1px solid var(--gray-200);
+    min-height: 64px;
+    background: var(--white);
+  }
+
+  .mode-title {
+    font-family: var(--font-display);
+    font-size: 21px;
+    letter-spacing: -0.3px;
+    color: var(--black);
+  }
+
+  .mode-desc {
+    font-size: 12.5px;
+    color: var(--gray-400);
+    margin-top: 1px;
+    font-weight: 300;
+  }
+
+  .header-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .btn {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    border: 1px solid transparent;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--gray-200);
+    color: var(--gray-600);
+  }
+  .btn-ghost:hover { border-color: var(--gray-400); color: var(--black); }
+
+  .btn-primary {
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
+  }
+  .btn-primary:hover { background: #222; }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── WORKSPACE ── */
+  .workspace {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+  }
+
+  /* ── PANEL ── */
+  .panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 28px 36px;
+    gap: 16px;
+  }
+
+  .panel-split {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  .column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .column-label {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    font-family: var(--font-mono);
+    font-weight: 400;
+  }
+
+  .textarea {
+    flex: 1;
+    resize: none;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--black);
+    background: var(--white);
+    transition: border-color var(--transition);
+    outline: none;
+    min-height: 200px;
+  }
+  .textarea:focus { border-color: var(--black); }
+  .textarea::placeholder { color: var(--gray-400); }
+  .textarea[readonly] {
+    background: var(--gray-100);
+    color: var(--gray-800);
+  }
+
+  .output-box {
+    flex: 1;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--black);
+    background: var(--gray-100);
+    overflow-y: auto;
+    min-height: 200px;
+    white-space: pre-wrap;
+    position: relative;
+  }
+
+  .output-placeholder {
+    color: var(--gray-400);
+    font-style: italic;
+    font-size: 13.5px;
+  }
+
+  /* ── OPTIONS ROW ── */
+  .options-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .select {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    color: var(--black);
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 6px 10px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color var(--transition);
+    appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  .select:focus { border-color: var(--black); }
+
+  .options-label {
+    font-size: 12px;
+    color: var(--gray-400);
+    font-weight: 300;
+  }
+
+  /* ── LOADING ── */
+  .loading-bar {
+    height: 2px;
+    background: var(--black);
+    width: 0%;
+    transition: width 0.8s ease;
+    border-radius: 1px;
+  }
+
+  .loading-wrap {
+    background: var(--gray-200);
+    border-radius: 1px;
+    overflow: hidden;
+    height: 2px;
+    margin-bottom: 4px;
+  }
+
+  @keyframes shimmer {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+  }
+
+  .thinking {
+    font-size: 12px;
+    color: var(--gray-400);
+    font-family: var(--font-mono);
+    animation: shimmer 1.4s infinite;
+  }
+
+  /* ── CITATION PANEL ── */
+  .citation-card {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    background: var(--white);
+  }
+
+  .citation-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .citation-type-badge {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+    background: var(--black);
+    color: var(--white);
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  .citation-output {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--gray-600);
+    line-height: 1.6;
+    background: var(--gray-100);
+    padding: 10px 12px;
+    border-radius: var(--radius);
+    margin-top: 8px;
+    border-left: 2px solid var(--black);
+  }
+
+  /* ── SOURCE VERIFY ── */
+  .verify-result {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-top: 8px;
+  }
+
+  .verify-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-dot.ok { background: #1a1a1a; }
+  .status-dot.warn { background: #888; }
+  .status-dot.bad { background: #000; border: 2px solid #888; }
+
+  /* ── SCROLLBARS ── */
+  .output-box::-webkit-scrollbar { width: 4px; }
+  .output-box::-webkit-scrollbar-track { background: transparent; }
+  .output-box::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 2px; }
+
+  /* ── COPY BUTTON ── */
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 11px;
+    padding: 4px 10px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    color: var(--gray-600);
+    transition: all var(--transition);
+    opacity: 0;
+  }
+  .output-box:hover .copy-btn { opacity: 1; }
+  .copy-btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+
+  /* ── INPUT FIELDS ── */
+  .input {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    padding: 9px 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    outline: none;
+    color: var(--black);
+    background: var(--white);
+    transition: border-color var(--transition);
+    width: 100%;
+  }
+  .input:focus { border-color: var(--black); }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .field-label {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--gray-600);
+  }
+
+  /* ── FORM GRID ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 1px;
+    background: var(--gray-200);
+    align-self: stretch;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  /* ── PAGE (single column modes) ── */
+  .panel-single {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 28px 36px;
+    gap: 16px;
+  }
+
+  .full-output {
+    flex: 1;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    background: var(--gray-100);
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    position: relative;
+  }
+
+  /* ── CHIP TOGGLES ── */
+  .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .chip {
+    font-size: 12px;
+    padding: 5px 13px;
+    border-radius: 100px;
+    border: 1px solid var(--gray-200);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-family: var(--font-body);
+    color: var(--gray-600);
+    background: var(--white);
+    user-select: none;
+  }
+  .chip.selected {
+    background: var(--black);
+    color: var(--white);
+    border-color: var(--black);
+  }
+  .chip:hover:not(.selected) { border-color: var(--black); color: var(--black); }
+
+  /* ── COHERENCE scores ── */
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .score-card {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+  }
+
+  .score-number {
+    font-family: var(--font-display);
+    font-size: 36px;
+    line-height: 1;
+    color: var(--black);
+    margin-bottom: 4px;
+  }
+
+  .score-label {
+    font-size: 11px;
+    color: var(--gray-400);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+  }
+
+  /* ── STYLE ADAPTER ── */
+  .reference-area {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeIn 0.25s ease forwards; }
+
+  .panel-view { display: none; }
+  .panel-view.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+
+  /* Word count */
+  .wc {
+    font-size: 11px;
+    color: var(--gray-400);
+    font-family: var(--font-mono);
+    text-align: right;
+    padding-top: 3px;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="logo">Clarity</span>
+      <span class="logo-sub">Escritura sin ruido</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+
+      <button class="nav-item active" onclick="switchMode('humanize')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M2 4h12M2 8h8M2 12h10"/>
+        </svg>
+        Humanizar texto
+      </button>
+
+      <button class="nav-item" onclick="switchMode('paraphrase')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 3l-2 5 2 5M12 3l2 5-2 5M6 8h4"/>
+        </svg>
+        Parafrasear
+      </button>
+
+      <button class="nav-item" onclick="switchMode('rewrite')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="12" height="12" rx="1"/>
+          <path d="M5 5h6M5 8h4M5 11h5"/>
+        </svg>
+        Reescribir por tipo
+      </button>
+
+      <button class="nav-item" onclick="switchMode('style')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="8" r="3"/>
+          <path d="M8 1v2M8 13v2M1 8h2M13 8h2"/>
+        </svg>
+        Adaptador de estilo
+      </button>
+
+      <div class="nav-section-label">Análisis</div>
+
+      <button class="nav-item" onclick="switchMode('coherence')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M2 12L6 6l3 4 2-3 3 5"/>
+        </svg>
+        Coherencia narrativa
+      </button>
+
+      <div class="nav-section-label">Fuentes</div>
+
+      <button class="nav-item" onclick="switchMode('citations')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/>
+          <path d="M5 6h6M5 9h4"/>
+        </svg>
+        Gestión de citas
+      </button>
+
+      <button class="nav-item" onclick="switchMode('verify')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="7" cy="7" r="5"/>
+          <path d="M12 12l3 3"/>
+        </svg>
+        Verificar fuentes
+      </button>
+
+      <button class="nav-item" onclick="switchMode('multilang')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="8" cy="8" r="6"/>
+          <path d="M8 2c-2 2-3 3.5-3 6s1 4 3 6M8 2c2 2 3 3.5 3 6s-1 4-3 6M2 8h12"/>
+        </svg>
+        Multilingüismo
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">clarity / v1.0</div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- Header -->
+    <div class="main-header" id="modeHeader">
+      <div>
+        <div class="mode-title" id="modeTitle">Humanizar texto</div>
+        <div class="mode-desc" id="modeDesc">Elimina patrones de IA. Devuelve voz natural al texto.</div>
+      </div>
+      <div class="header-controls">
+        <button class="btn btn-ghost" onclick="clearAll()">Limpiar</button>
+        <button class="btn btn-primary" id="runBtn" onclick="runCurrent()">Procesar</button>
+      </div>
+    </div>
+
+    <!-- ── VIEWS ── -->
+    <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+
+      <!-- HUMANIZE -->
+      <div class="panel-view active" id="view-humanize">
+        <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
+          <div class="options-row">
+            <span class="options-label">Tipo de texto</span>
+            <select class="select" id="h-contentType">
+              <option value="blog">Post / artículo</option>
+              <option value="readme">README / documentación</option>
+              <option value="academic">Académico</option>
+              <option value="technical">Documentación técnica</option>
+              <option value="pr">PR / commit / changelog</option>
+            </select>
+            <span class="options-label">Intensidad</span>
+            <select class="select" id="h-intensity">
+              <option value="light">Ligera</option>
+              <option value="standard" selected>Estándar</option>
+              <option value="deep">Profunda</option>
+            </select>
+          </div>
+          <div class="panel-split">
+            <div class="column">
+              <div class="column-label">Texto original</div>
+              <textarea class="textarea" id="h-input" placeholder="Pega aquí el texto con marcas de IA..."></textarea>
+              <div class="wc" id="h-wc">0 palabras</div>
+            </div>
+            <div class="divider"></div>
+            <div class="column">
+              <div class="column-label">Texto humanizado</div>
+              <div class="output-box" id="h-output">
+                <span class="output-placeholder">El resultado aparecerá aquí.</span>
+                <button class="copy-btn" onclick="copyOutput('h-output')">Copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARAPHRASE -->
+      <div class="panel-view" id="view-paraphrase">
+        <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
+          <div class="options-row">
+            <span class="options-label">Registro</span>
+            <select class="select" id="p-register">
+              <option value="formal">Formal</option>
+              <option value="academic">Académico</option>
+              <option value="casual">Casual</option>
+              <option value="neutral" selected>Neutro</option>
+            </select>
+            <span class="options-label">Prioridad</span>
+            <select class="select" id="p-priority">
+              <option value="naturalness" selected>Naturalidad</option>
+              <option value="concision">Concisión</option>
+              <option value="clarity">Claridad</option>
+              <option value="variety">Variedad léxica</option>
+            </select>
+          </div>
+          <div class="panel-split">
+            <div class="column">
+              <div class="column-label">Texto fuente</div>
+              <textarea class="textarea" id="p-input" placeholder="Pega el texto a parafrasear..."></textarea>
+              <div class="wc" id="p-wc">0 palabras</div>
+            </div>
+            <div class="divider"></div>
+            <div class="column">
+              <div class="column-label">Paráfrasis</div>
+              <div class="output-box" id="p-output">
+                <span class="output-placeholder">El resultado aparecerá aquí.</span>
+                <button class="copy-btn" onclick="copyOutput('p-output')">Copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REWRITE BY TYPE -->
+      <div class="panel-view" id="view-rewrite">
+        <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
+          <div class="options-row">
+            <span class="options-label">Convertir a</span>
+            <select class="select" id="rw-type">
+              <option value="essay">Ensayo académico</option>
+              <option value="email">Correo profesional</option>
+              <option value="report">Informe ejecutivo</option>
+              <option value="blogpost">Post de blog</option>
+              <option value="summary">Resumen ejecutivo</option>
+              <option value="linkedin">Publicación LinkedIn</option>
+            </select>
+            <span class="options-label">Extensión</span>
+            <select class="select" id="rw-length">
+              <option value="same" selected>Similar</option>
+              <option value="shorter">Más corto</option>
+              <option value="longer">Más extenso</option>
+            </select>
+          </div>
+          <div class="panel-split">
+            <div class="column">
+              <div class="column-label">Texto original</div>
+              <textarea class="textarea" id="rw-input" placeholder="Pega el texto que quieres reescribir..."></textarea>
+              <div class="wc" id="rw-wc">0 palabras</div>
+            </div>
+            <div class="divider"></div>
+            <div class="column">
+              <div class="column-label">Reescritura</div>
+              <div class="output-box" id="rw-output">
+                <span class="output-placeholder">El resultado aparecerá aquí.</span>
+                <button class="copy-btn" onclick="copyOutput('rw-output')">Copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STYLE ADAPTER -->
+      <div class="panel-view" id="view-style">
+        <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
+          <p style="font-size:13px;color:var(--gray-400);font-weight:300;">Pega un texto de referencia cuyo estilo quieras imitar, luego pega el texto que debe adaptarse a ese estilo.</p>
+          <div class="reference-area">
+            <div class="column">
+              <div class="column-label">Texto de referencia (estilo)</div>
+              <textarea class="textarea" id="st-ref" placeholder="Pega aquí el texto cuyo estilo quieres imitar..."></textarea>
+            </div>
+            <div class="divider"></div>
+            <div class="column">
+              <div class="column-label">Texto a adaptar</div>
+              <textarea class="textarea" id="st-input" placeholder="Pega aquí el texto que debe adoptar ese estilo..."></textarea>
+            </div>
+            <div class="divider"></div>
+            <div class="column">
+              <div class="column-label">Resultado</div>
+              <div class="output-box" id="st-output">
+                <span class="output-placeholder">El resultado aparecerá aquí.</span>
+                <button class="copy-btn" onclick="copyOutput('st-output')">Copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COHERENCE -->
+      <div class="panel-view" id="view-coherence">
+        <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
+          <div class="panel-split">
+            <div class="column">
+              <div class="column-label">Texto a analizar</div>
+              <textarea class="textarea" id="co-input" placeholder="Pega aquí tu texto para analizar su coherencia y estructura..."></textarea>
+              <div class="wc" id="co-wc">0 palabras</div>
+            </div>
+            <div class="divider"></div>
+            <div class="column" style="overflow-y:auto;">
+              <div class="column-label">Análisis</div>
+              <div id="co-scores" style="display:none;">
+                <div class="score-grid" id="co-score-grid"></div>
+              </div>
+              <div class="output-box" id="co-output" style="flex:1;min-height:160px;">
+                <span class="output-placeholder">El análisis aparecerá aquí.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CITATIONS -->
+      <div class="panel-view" id="view-citations">
+        <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
+          <div class="options-row">
+            <span class="options-label">Formato</span>
+            <select class="select" id="cit-format">
+              <option value="APA7">APA 7.ª ed.</option>
+              <option value="MLA9">MLA 9.ª ed.</option>
+              <option value="Chicago">Chicago 17.ª ed.</option>
+              <option value="Vancouver">Vancouver</option>
+              <option value="IEEE">IEEE</option>
+              <option value="Harvard">Harvard</option>
+            </select>
+            <span class="options-label">Tipo de fuente</span>
+            <select class="select" id="cit-type">
+              <option value="book">Libro</option>
+              <option value="article">Artículo académico</option>
+              <option value="website">Sitio web</option>
+              <option value="journal">Revista científica</option>
+              <option value="chapter">Capítulo de libro</option>
+              <option value="newspaper">Periódico</option>
+              <option value="thesis">Tesis/disertación</option>
+            </select>
+          </div>
+
+          <div class="form-grid" id="citFields">
+            <div class="field-group">
+              <label class="field-label">Autor(es)</label>
+              <input class="input" id="cit-author" placeholder="Apellido, Nombre">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Año</label>
+              <input class="input" id="cit-year" placeholder="2024">
+            </div>
+            <div class="field-group" style="grid-column: span 2;">
+              <label class="field-label">Título</label>
+              <input class="input" id="cit-title" placeholder="Título de la obra">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Editorial / Revista / URL</label>
+              <input class="input" id="cit-source" placeholder="Editorial o fuente">
+            </div>
+            <div class="field-group">
+              <label class="field-label">DOI / Páginas</label>
+              <input class="input" id="cit-extra" placeholder="doi:10.xxx o pp. 12–34">
+            </div>
+          </div>
+
+          <div>
+            <div class="column-label" style="margin-bottom:8px;">Cita generada</div>
+            <div class="citation-output" id="cit-output" style="min-height:52px;">—</div>
+          </div>
+
+          <div style="margin-top:auto;">
+            <div class="column-label" style="margin-bottom:8px;">Texto con cita en contexto</div>
+            <textarea class="textarea" id="cit-context" placeholder="Opcional: pega aquí el párrafo donde quieres insertar la cita. Clarity la integrará correctamente." style="min-height:80px;"></textarea>
+          </div>
+          <div class="output-box" id="cit-ctx-output" style="min-height:80px;max-height:140px;">
+            <span class="output-placeholder">El párrafo con la cita integrada aparecerá aquí.</span>
+            <button class="copy-btn" onclick="copyOutput('cit-ctx-output')">Copiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VERIFY -->
+      <div class="panel-view" id="view-verify">
+        <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
+          <p style="font-size:13px;color:var(--gray-400);font-weight:300;">Analiza si una fuente parece legítima, detecta señales de riesgo y sugiere alternativas verificables.</p>
+          <div class="field-group">
+            <label class="field-label">URL o nombre de la fuente</label>
+            <input class="input" id="vf-url" placeholder="https://... o nombre del artículo / revista">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Contexto adicional (opcional)</label>
+            <textarea class="textarea" id="vf-context" placeholder="Describe brevemente de qué trata la fuente o por qué la usas..." style="min-height:80px;max-height:120px;"></textarea>
+          </div>
+          <div class="output-box" id="vf-output" style="flex:1;min-height:160px;">
+            <span class="output-placeholder">El análisis de la fuente aparecerá aquí.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MULTILANG -->
+      <div class="panel-view" id="view-multilang">
+        <div class="panel" style="display:flex;flex-direction:column;gap:16px;flex:1;overflow:hidden;">
+          <div class="options-row">
+            <span class="options-label">Idioma origen</span>
+            <select class="select" id="ml-from">
+              <option value="auto">Detectar automáticamente</option>
+              <option value="es">Español</option>
+              <option value="en">Inglés</option>
+              <option value="fr">Francés</option>
+              <option value="de">Alemán</option>
+              <option value="pt">Portugués</option>
+              <option value="it">Italiano</option>
+            </select>
+            <span class="options-label">Idioma destino</span>
+            <select class="select" id="ml-to">
+              <option value="es">Español</option>
+              <option value="en" selected>Inglés</option>
+              <option value="fr">Francés</option>
+              <option value="de">Alemán</option>
+              <option value="pt">Portugués</option>
+              <option value="it">Italiano</option>
+            </select>
+            <span class="options-label">Tarea</span>
+            <select class="select" id="ml-task">
+              <option value="translate">Traducir</option>
+              <option value="translate_humanize">Traducir y humanizar</option>
+              <option value="adapt">Adaptar culturalmente</option>
+            </select>
+          </div>
+          <div class="panel-split">
+            <div class="column">
+              <div class="column-label">Texto original</div>
+              <textarea class="textarea" id="ml-input" placeholder="Pega el texto aquí..."></textarea>
+              <div class="wc" id="ml-wc">0 palabras</div>
+            </div>
+            <div class="divider"></div>
+            <div class="column">
+              <div class="column-label">Resultado</div>
+              <div class="output-box" id="ml-output">
+                <span class="output-placeholder">La traducción/adaptación aparecerá aquí.</span>
+                <button class="copy-btn" onclick="copyOutput('ml-output')">Copiar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end views wrapper -->
+  </main>
+</div>
+
+<script>
+// ── CONFIG ──
+const OPENROUTER_API_KEY = "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";
+// openrouter/free: router oficial gratuito de OpenRouter (selecciona el mejor modelo libre disponible)
+// Los siguientes son fallbacks con modelos :free confirmados activos en marzo 2026
+const FREE_MODELS = [
+  "openrouter/free",
+  "meta-llama/llama-4-scout:free",
+  "meta-llama/llama-3.3-70b-instruct:free",
+  "deepseek/deepseek-r1:free",
+  "google/gemma-3-27b-it:free"
+];
+
+// ── MODE CONFIG ──
+const modes = {
+  humanize:  { title: "Humanizar texto",         desc: "Elimina patrones de IA. Devuelve voz natural al texto." },
+  paraphrase:{ title: "Parafrasear",              desc: "Reformula manteniendo el significado y el registro elegido." },
+  rewrite:   { title: "Reescribir por tipo",      desc: "Adapta el texto al formato y convenciones del tipo seleccionado." },
+  style:     { title: "Adaptador de estilo",      desc: "Imita el tono y voz de un texto de referencia." },
+  coherence: { title: "Coherencia narrativa",     desc: "Analiza estructura, fluidez y consistencia argumentativa." },
+  citations: { title: "Gestión de citas",         desc: "Genera citas precisas en los principales formatos académicos." },
+  verify:    { title: "Verificar fuentes",        desc: "Evalúa la credibilidad y confiabilidad de una fuente." },
+  multilang: { title: "Multilingüismo",           desc: "Traduce, adapta culturalmente y humaniza entre idiomas." },
+};
+
+let currentMode = "humanize";
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.panel-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + mode).classList.add('active');
+  document.getElementById('modeTitle').textContent = modes[mode].title;
+  document.getElementById('modeDesc').textContent = modes[mode].desc;
+  // hide run btn for citations (live) 
+  document.getElementById('runBtn').style.display = mode === 'citations' ? 'none' : '';
+}
+
+// ── WORD COUNT ──
+function wordCount(text) {
+  return text.trim() ? text.trim().split(/\s+/).length : 0;
+}
+
+['h-input','p-input','rw-input','co-input','ml-input'].forEach(id => {
+  const el = document.getElementById(id);
+  const wcId = id.replace('-input','-wc');
+  if(el) el.addEventListener('input', () => {
+    const wc = document.getElementById(wcId);
+    if(wc) wc.textContent = wordCount(el.value) + ' palabras';
+  });
+});
+
+// ── API ──
+async function callLLM(systemPrompt, userContent, modelIndex = 0) {
+  if (modelIndex >= FREE_MODELS.length) {
+    throw new Error("Todos los modelos gratuitos están ocupados. Intenta en unos segundos.");
+  }
+  const model = FREE_MODELS[modelIndex];
+
+  let res;
+  try {
+    res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "HTTP-Referer": "https://clarity.app",
+        "X-Title": "Clarity"
+      },
+      body: JSON.stringify({
+        model,
+        max_tokens: 2048,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userContent }
+        ]
+      })
+    });
+  } catch (networkErr) {
+    throw new Error("Error de red. Verifica tu conexión.");
+  }
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const msg = err.error?.message || `Error ${res.status}`;
+    // Si es error de proveedor o rate limit, probar el siguiente modelo
+    if (res.status === 429 || res.status === 502 || res.status === 503 || msg.toLowerCase().includes("provider")) {
+      console.warn(`Modelo ${model} falló (${msg}), probando siguiente...`);
+      return callLLM(systemPrompt, userContent, modelIndex + 1);
+    }
+    throw new Error(msg);
+  }
+
+  const data = await res.json();
+  const content = data.choices?.[0]?.message?.content?.trim();
+  if (!content) {
+    console.warn(`Modelo ${model} devolvió vacío, probando siguiente...`);
+    return callLLM(systemPrompt, userContent, modelIndex + 1);
+  }
+  return content;
+}
+
+function stripMarkdown(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '$1')       // **negrita**
+    .replace(/\*(.+?)\*/g, '$1')            // *cursiva*
+    .replace(/_{1,2}(.+?)_{1,2}/g, '$1')   // _cursiva_ o __negrita__
+    .replace(/#{1,6}\s+/gm, '')             // # encabezados
+    .replace(/`{1,3}[^`]*`{1,3}/g, (m) => m.replace(/`/g,'')) // `código`
+    .replace(/^\s*[-*+]\s+/gm, '• ')       // listas con guion/asterisco → bullet limpio
+    .replace(/^\s*\d+\.\s+/gm, '')         // listas numeradas
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')    // [texto](url) → texto
+    .replace(/\n{3,}/g, '\n\n')            // más de dos saltos → dos
+    .trim();
+}
+
+function setOutput(id, text) {
+  const clean = stripMarkdown(text);
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  const pre = document.createElement('div');
+  pre.style.whiteSpace = 'pre-wrap';
+  pre.textContent = clean;
+  el.appendChild(pre);
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'Copiar';
+  btn.onclick = () => copyText(clean);
+  el.appendChild(btn);
+  el.classList.add('fade-in');
+}
+
+function setStatus(msg) {
+  // solo mostrar errores reales en consola, nada visible al usuario
+  if (msg) console.warn('Clarity:', msg);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).catch(()=>{});
+}
+
+function copyOutput(id) {
+  const el = document.getElementById(id);
+  const text = el.innerText.replace('Copiar','').trim();
+  copyText(text);
+}
+
+function clearAll() {
+  document.querySelectorAll('textarea').forEach(t => { t.value = ''; });
+  ['h-output','p-output','rw-output','st-output','co-output','vf-output','cit-ctx-output','ml-output'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = '<span class="output-placeholder">El resultado aparecerá aquí.</span>';
+  });
+  const co = document.getElementById('cit-output');
+  if(co) co.textContent = '—';
+  ['h-wc','p-wc','rw-wc','co-wc','ml-wc'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = '0 palabras';
+  });
+}
+
+function setLoading(outputId) {
+  const el = document.getElementById(outputId);
+  if(el) el.innerHTML = '<div class="thinking">Procesando...</div>';
+}
+
+// ── HUMANIZE SYSTEM PROMPT ──
+function buildHumanizePrompt(contentType, intensity) {
+  const intensityMap = {
+    light: "Haz solo correcciones mínimas: elimina frases de relleno obvias, adjetivos inflados y artefactos de chatbot. Preserva el máximo del original.",
+    standard: "Corrige todos los patrones detectados. Reescribe oraciones donde sea necesario. Conserva la estructura general.",
+    deep: "Reescritura completa para voz natural. Reestructura párrafos si hace falta. Varía el ritmo oracional. Sé específico."
+  };
+  const typeMap = {
+    blog: "Es un post de blog o artículo. Aplica personalidad completa, opiniones, ritmo variado.",
+    readme: "Es un README o documentación de proyecto. Ligera personalidad. Elimina inflación y buzzwords.",
+    academic: "Es texto académico. Sin personalidad ni opiniones. Solo precisión y fluidez.",
+    technical: "Es documentación técnica. Cero personalidad. Elimina relleno y sobreexplicación.",
+    pr: "Es descripción de PR, commit o changelog. Brevedad máxima. Elimina relleno."
+  };
+
+  return `Eres un experto en reescritura de textos con el objetivo de eliminar señales de texto generado por IA. Tu única salida es el texto reescrito, sin comentarios, explicaciones ni metadatos.
+
+TIPO DE CONTENIDO: ${typeMap[contentType] || typeMap.blog}
+INTENSIDAD: ${intensityMap[intensity] || intensityMap.standard}
+
+PATRONES A ELIMINAR:
+1. Lenguaje inflado: "sirve como", "representa", "constituye", "encarna", "revolucionario", "deslumbrante", "adentrarse", "intrincado", "potenciar", "vibrante", "profundo", "impresionante"
+2. Profundidad falsa: gerundios encadenados, "no solo X sino Y", "desde X hasta Y", "expertos señalan", "los estudios muestran" sin cita concreta
+3. Gramática antinatural: "es importante señalar que", "tiene la capacidad de", "con el fin de", "en este momento", "podría potencialmente", "se erige como"
+4. Artefactos de chatbot: "¡Por supuesto!", "¡Qué buena pregunta!", "Espero que esto ayude", "Avísame si", "Hasta mi última actualización"
+5. Cierres débiles: "el futuro es prometedor", "se avecinan tiempos emocionantes", "continúa evolucionando", "en conclusión"
+6. Formato de IA: guiones largos abusivos, negritas mecánicas, emojis decorativos, listas donde cabe prosa
+
+REGLAS:
+- Preserva el significado exacto. No inventes datos ni ejemplos.
+- Varía la longitud de las oraciones.
+- Sé específico donde el original es vago (solo si hay base en el texto).
+- Devuelve SOLO el texto reescrito, sin encabezados ni comentarios.`;
+}
+
+// ── RUN ──
+async function runCurrent() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  setStatus('');
+
+  try {
+    if(currentMode === 'humanize') {
+      const input = document.getElementById('h-input').value.trim();
+      if(!input) { setLoading('h-output'); document.getElementById('h-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
+      const ct = document.getElementById('h-contentType').value;
+      const intensity = document.getElementById('h-intensity').value;
+      setLoading('h-output');
+      const result = await callLLM(buildHumanizePrompt(ct, intensity), input);
+      setOutput('h-output', result);
+
+    } else if(currentMode === 'paraphrase') {
+      const input = document.getElementById('p-input').value.trim();
+      if(!input) { document.getElementById('p-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
+      const register = document.getElementById('p-register').value;
+      const priority = document.getElementById('p-priority').value;
+      const registerMap = { formal: "formal y profesional", academic: "académico y riguroso", casual: "casual y cercano", neutral: "neutro y claro" };
+      const priorityMap = { naturalness: "naturalidad de lectura", concision: "máxima concisión", clarity: "claridad extrema", variety: "variedad léxica" };
+      const sys = `Eres un experto en paráfrasis. Reformula el texto en registro ${registerMap[register]}, priorizando ${priorityMap[priority]}. No pierdas ningún dato ni argumento del original. Devuelve SOLO la paráfrasis, sin comentarios.`;
+      setLoading('p-output');
+      const result = await callLLM(sys, input);
+      setOutput('p-output', result);
+
+    } else if(currentMode === 'rewrite') {
+      const input = document.getElementById('rw-input').value.trim();
+      if(!input) { document.getElementById('rw-output').innerHTML = '<span class="output-placeholder">Escribe o pega texto primero.</span>'; return; }
+      const type = document.getElementById('rw-type').value;
+      const length = document.getElementById('rw-length').value;
+      const typeMap = {
+        essay: "ensayo académico formal con tesis, desarrollo argumentado y conclusión",
+        email: "correo profesional directo, con saludo, cuerpo breve y cierre",
+        report: "informe ejecutivo con puntos clave destacados y lenguaje preciso",
+        blogpost: "post de blog con tono conversacional, párrafos cortos y gancho inicial",
+        summary: "resumen ejecutivo en 3-5 puntos esenciales",
+        linkedin: "publicación de LinkedIn profesional pero personal, con llamada a la acción"
+      };
+      const lengthMap = { same: "extensión similar al original", shorter: "30-40% más corto que el original", longer: "30-40% más extenso que el original" };
+      const sys = `Eres un escritor profesional experto en adaptar textos. Reescribe el texto como ${typeMap[type]}. Extensión: ${lengthMap[length]}. Preserva todos los datos e ideas del original. Devuelve SOLO el texto reescrito, sin comentarios.`;
+      setLoading('rw-output');
+      const result = await callLLM(sys, input);
+      setOutput('rw-output', result);
+
+    } else if(currentMode === 'style') {
+      const ref = document.getElementById('st-ref').value.trim();
+      const input = document.getElementById('st-input').value.trim();
+      if(!ref || !input) { document.getElementById('st-output').innerHTML = '<span class="output-placeholder">Necesitas los dos textos para continuar.</span>'; return; }
+      const sys = `Eres un experto en análisis y adaptación de estilo. Analiza el estilo, voz, tono, ritmo oracional y léxico del texto de referencia. Luego reescribe el texto a adaptar usando ese mismo estilo pero preservando su contenido e ideas completamente. Devuelve SOLO el texto adaptado.`;
+      setLoading('st-output');
+      const result = await callLLM(sys, `TEXTO DE REFERENCIA (estilo a imitar):\n${ref}\n\nTEXTO A ADAPTAR:\n${input}`);
+      setOutput('st-output', result);
+
+    } else if(currentMode === 'coherence') {
+      const input = document.getElementById('co-input').value.trim();
+      if(!input) { document.getElementById('co-output').innerHTML = '<span class="output-placeholder">Pega el texto a analizar.</span>'; return; }
+      const sys = `Eres un experto en análisis de escritura. Analiza el texto en estas dimensiones y devuelve SOLO un JSON con este formato exacto, sin markdown ni explicaciones:
+{"coherence": <0-100>, "flow": <0-100>, "structure": <0-100>, "analysis": "<análisis narrativo de 150-200 palabras que explica los hallazgos, señala problemas específicos con citas del texto y da recomendaciones concretas>"}`;
+      setLoading('co-output');
+      const raw = await callLLM(sys, input);
+      let parsed;
+      try {
+        const clean = raw.replace(/```json|```/g,'').trim();
+        parsed = JSON.parse(clean);
+      } catch(e) {
+        setOutput('co-output', raw);
+        return;
+      }
+      const grid = document.getElementById('co-score-grid');
+      grid.innerHTML = `
+        <div class="score-card"><div class="score-number">${parsed.coherence}</div><div class="score-label">Coherencia</div></div>
+        <div class="score-card"><div class="score-number">${parsed.flow}</div><div class="score-label">Fluidez</div></div>
+        <div class="score-card"><div class="score-number">${parsed.structure}</div><div class="score-label">Estructura</div></div>
+      `;
+      document.getElementById('co-scores').style.display = 'block';
+      setOutput('co-output', stripMarkdown(parsed.analysis || ''));
+
+    } else if(currentMode === 'verify') {
+      const url = document.getElementById('vf-url').value.trim();
+      if(!url) { document.getElementById('vf-output').innerHTML = '<span class="output-placeholder">Ingresa una URL o nombre de fuente.</span>'; return; }
+      const context = document.getElementById('vf-context').value.trim();
+      const sys = `Eres un bibliotecario académico y fact-checker experto. Analiza la fuente indicada y evalúa: credibilidad del dominio/institución, señales de riesgo (sitio predatorio, sin revisión por pares, sin autoría clara, sin fecha, contenido de mala calidad), y sugiere fuentes alternativas verificables si aplica. Sé directo y específico. Estructura tu respuesta en: EVALUACIÓN, SEÑALES DE RIESGO y ALTERNATIVAS SUGERIDAS.`;
+      setLoading('vf-output');
+      const userMsg = url + (context ? `\nContexto: ${context}` : '');
+      const result = await callLLM(sys, userMsg);
+      setOutput('vf-output', result);
+
+    } else if(currentMode === 'multilang') {
+      const input = document.getElementById('ml-input').value.trim();
+      if(!input) { document.getElementById('ml-output').innerHTML = '<span class="output-placeholder">Pega el texto a procesar.</span>'; return; }
+      const from = document.getElementById('ml-from').value;
+      const to = document.getElementById('ml-to').value;
+      const task = document.getElementById('ml-task').value;
+      const langNames = { es:'español', en:'inglés', fr:'francés', de:'alemán', pt:'portugués', it:'italiano', auto:'el idioma detectado' };
+      let instruction;
+      if(task === 'translate') instruction = `Traduce del ${langNames[from] || from} al ${langNames[to]}. Mantén el registro, el tono y la estructura del original. Sin comentarios.`;
+      else if(task === 'translate_humanize') instruction = `Traduce del ${langNames[from] || from} al ${langNames[to]} y elimina cualquier rastro de texto generado por IA: lenguaje inflado, frases de relleno, estructuras artificiosas. El resultado debe sonar natural y humano en ${langNames[to]}. Sin comentarios.`;
+      else instruction = `Adapta culturalmente el texto del ${langNames[from] || from} al ${langNames[to]}: no solo traduce las palabras sino los referentes culturales, ejemplos, expresiones idiomáticas y convenciones comunicativas. Sin comentarios.`;
+      setLoading('ml-output');
+      const result = await callLLM(instruction, input);
+      setOutput('ml-output', result);
+    }
+
+    setStatus('');
+  } catch(err) {
+    const outputs = { humanize:'h-output', paraphrase:'p-output', rewrite:'rw-output', style:'st-output', coherence:'co-output', verify:'vf-output', multilang:'ml-output' };
+    const outId = outputs[currentMode];
+    if(outId) {
+      const el = document.getElementById(outId);
+      if(el) el.innerHTML = `<span style="color:#999;font-size:13px;font-family:var(--font-mono);">No se pudo procesar. Intenta de nuevo en unos segundos.</span>`;
+    }
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ── CITATIONS (live generation on input) ──
+let citTimeout;
+document.querySelectorAll('#cit-author, #cit-year, #cit-title, #cit-source, #cit-extra').forEach(el => {
+  el.addEventListener('input', () => {
+    clearTimeout(citTimeout);
+    citTimeout = setTimeout(generateCitation, 800);
+  });
+});
+document.getElementById('cit-format').addEventListener('change', generateCitation);
+document.getElementById('cit-type').addEventListener('change', generateCitation);
+
+async function generateCitation() {
+  const format = document.getElementById('cit-format').value;
+  const type = document.getElementById('cit-type').value;
+  const author = document.getElementById('cit-author').value.trim();
+  const year = document.getElementById('cit-year').value.trim();
+  const title = document.getElementById('cit-title').value.trim();
+  const source = document.getElementById('cit-source').value.trim();
+  const extra = document.getElementById('cit-extra').value.trim();
+  if(!title && !author) return;
+
+  const citOut = document.getElementById('cit-output');
+  citOut.textContent = 'Generando...';
+
+  const sys = `Eres un experto en normas bibliográficas. Genera una cita en formato ${format} para una fuente de tipo "${type}". Devuelve SOLO la cita formateada, sin explicación ni metadatos.`;
+  const userMsg = `Autor: ${author || 'N/A'}\nAño: ${year || 'N/A'}\nTítulo: ${title || 'N/A'}\nFuente/Editorial: ${source || 'N/A'}\nDOI/Páginas: ${extra || 'N/A'}`;
+  try {
+    const result = await callLLM(sys, userMsg);
+    citOut.textContent = stripMarkdown(result);
+
+    // If context provided, integrate citation
+    const ctx = document.getElementById('cit-context').value.trim();
+    if(ctx) {
+      const ctxOut = document.getElementById('cit-ctx-output');
+      ctxOut.innerHTML = '<div class="thinking">Integrando cita...</div>';
+      const ctxSys = `Integra la siguiente cita bibliográfica en el párrafo de forma natural, siguiendo las convenciones de ${format}. Devuelve SOLO el párrafo con la cita integrada.`;
+      const ctxResult = await callLLM(ctxSys, `PÁRRAFO:\n${ctx}\n\nCITA:\n${result}`);
+      setOutput('cit-ctx-output', ctxResult);
+    }
+  } catch(e) {
+    citOut.textContent = 'No se pudo generar. Intenta de nuevo.';
+  }
+}
+
+document.getElementById('cit-context').addEventListener('blur', () => {
+  const title = document.getElementById('cit-title').value.trim();
+  if(title) generateCitation();
+});
+
+// ── RUN ON ENTER (ctrl+enter) ──
+document.addEventListener('keydown', (e) => {
+  if(e.ctrlKey && e.key === 'Enter') runCurrent();
+});
+
+</script>
+</body>
+</html>
